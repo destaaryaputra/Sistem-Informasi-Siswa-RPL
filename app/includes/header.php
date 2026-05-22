@@ -75,7 +75,7 @@ if (isset($bodyClass) && is_string($bodyClass) && trim($bodyClass) !== '') {
     $bodyClasses[] = trim($bodyClass);
 }
 $bodyClass = implode(' ', array_values(array_unique($bodyClasses)));
-$styleVersion = (string) (@filemtime(__DIR__ . '/../../public/assets/style.css') ?: time());
+$styleVersion = (string) (@filemtime(__DIR__ . '/../../web/assets/style.css') ?: time());
 $notifLabel = (($user['role'] ?? '') === 'admin') ? 'Notifikasi Sistem' : 'Notifikasi';
 ?>
 <!doctype html>
