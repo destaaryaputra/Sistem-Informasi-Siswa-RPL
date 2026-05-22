@@ -139,11 +139,39 @@ if (request_method_is('POST') && $error === '') {
                         <input type="hidden" name="token" value="<?= e($token) ?>">
                         <div class="login-field">
                             <label for="password">Password Baru</label>
-                            <input type="password" id="password" name="password" minlength="8" required autocomplete="new-password">
+                            <div class="login-input-wrap">
+                                <div class="icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                                        <path d="M8 11V8.5C8 6.6 9.6 5 11.5 5H12.5C14.4 5 16 6.6 16 8.5V11" stroke="currentColor" stroke-width="1.8"/>
+                                    </svg>
+                                </div>
+                                <input type="password" id="password" name="password" minlength="8" required autocomplete="new-password" placeholder="Password Baru">
+                                <button type="button" class="password-toggle" data-toggle="password" aria-label="Tampilkan password">
+                                    <svg class="eye-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                         <div class="login-field">
                             <label for="password_confirm">Konfirmasi Password</label>
-                            <input type="password" id="password_confirm" name="password_confirm" minlength="8" required autocomplete="new-password">
+                            <div class="login-input-wrap">
+                                <div class="icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                                        <path d="M8 11V8.5C8 6.6 9.6 5 11.5 5H12.5C14.4 5 16 6.6 16 8.5V11" stroke="currentColor" stroke-width="1.8"/>
+                                    </svg>
+                                </div>
+                                <input type="password" id="password_confirm" name="password_confirm" minlength="8" required autocomplete="new-password" placeholder="Konfirmasi Password">
+                                <button type="button" class="password-toggle" data-toggle="password_confirm" aria-label="Tampilkan password">
+                                    <svg class="eye-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                         <button class="login-submit" type="submit">Simpan Password</button>
                     </form>
@@ -163,5 +191,37 @@ if (request_method_is('POST') && $error === '') {
         <p class="footer-note">Sistem pemantauan kehadiran, nilai, dan notifikasi akademik secara terintegrasi.</p>
     </div>
 </footer>
+
+<script>
+(() => {
+    // Password Toggle Logic
+    document.querySelectorAll('.password-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const inputId = btn.getAttribute('data-toggle');
+            const input = document.getElementById(inputId);
+            const eyeIcon = btn.querySelector('.eye-icon');
+            
+            if (input && eyeIcon) {
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                
+                if (isPassword) {
+                    eyeIcon.innerHTML = `
+                        <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    `;
+                    btn.setAttribute('aria-label', 'Sembunyikan password');
+                } else {
+                    eyeIcon.innerHTML = `
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    `;
+                    btn.setAttribute('aria-label', 'Tampilkan password');
+                }
+            }
+        });
+    });
+})();
+</script>
 </body>
 </html>

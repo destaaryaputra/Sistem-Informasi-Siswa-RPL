@@ -2264,46 +2264,56 @@ body.login-portal.login-ready .login-field:nth-of-type(2) .login-input-wrap inpu
 }
 
 .login-input-wrap {
-    display: grid;
-    grid-template-columns: 40px 1fr auto;
+    display: flex;
     align-items: center;
     border: 1px solid rgba(15, 44, 78, 0.2);
     border-radius: var(--radius-md);
     background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.login-input-wrap:focus-within {
+    border-color: #0f5ea8;
+    box-shadow: 0 0 0 3px rgba(15, 94, 168, 0.1);
 }
 
 .login-input-wrap .icon {
-    display: grid;
-    place-items: center;
+    width: 40px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #56718e;
+    flex-shrink: 0;
 }
 
 .login-input-wrap .icon svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
 }
 
 .login-input-wrap input {
-    border: 0;
-    outline: none;
+    border: 0 !important;
+    outline: none !important;
     padding: 12px 12px 12px 0;
     font-size: 14px;
-    background: transparent;
+    background: transparent !important;
     width: 100%;
+    box-shadow: none !important;
 }
 
 .password-toggle {
     background: none;
     border: none;
     padding: 0 12px;
-    margin-right: 4px;
     cursor: pointer;
-    color: var(--muted);
+    color: #56718e;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: color 0.2s;
     outline: none;
+    flex-shrink: 0;
 }
 
 .password-toggle:hover {

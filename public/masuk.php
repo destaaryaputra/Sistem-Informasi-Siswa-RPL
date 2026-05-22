@@ -242,12 +242,13 @@ if (request_method_is('POST')) {
                                     <path d="M8 11V8.5C8 6.6 9.6 5 11.5 5H12.5C14.4 5 16 6.6 16 8.5V11" stroke="currentColor" stroke-width="1.8"/>
                                 </svg>
                             </div>
-                            <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••">
-                             <button type="button" id="togglePassword" class="password-toggle" aria-label="Tampilkan password">👁</button>
-
-
-
-
+                            <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Password">
+                             <button type="button" id="togglePassword" class="password-toggle" aria-label="Tampilkan password">
+                                <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                             </button>
                         </div>
                     </div>
                      <button class="login-submit" type="submit">Masuk</button>
@@ -266,6 +267,33 @@ if (request_method_is('POST')) {
 </footer>
 <script>
 (() => {
+    // Password Toggle Logic
+    const toggleBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    if (toggleBtn && passwordInput) {
+        toggleBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            
+            // Update Icon
+            if (isPassword) {
+                eyeIcon.innerHTML = `
+                    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                `;
+                toggleBtn.setAttribute('aria-label', 'Sembunyikan password');
+            } else {
+                eyeIcon.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                `;
+                toggleBtn.setAttribute('aria-label', 'Tampilkan password');
+            }
+        });
+    }
+
     const body = document.body;
     let revealed = false;
 
