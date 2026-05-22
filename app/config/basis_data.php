@@ -21,7 +21,8 @@ try {
 } catch (PDOException $e) {
     // Jika koneksi gagal, hentikan aplikasi dengan pesan yang jelas.
     http_response_code(500);
-    die('Koneksi database gagal. Pastikan MySQL aktif dan database sudah dibuat.');
+    $errMsg = $e->getMessage();
+    die("Koneksi database gagal. Cek Environment Variables (ENV) dan pastikan database Supabase aktif. Error: {$errMsg}");
 }
 
 // Cek keberadaan kolom untuk fallback kompatibilitas skema lama.

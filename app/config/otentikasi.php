@@ -24,21 +24,14 @@ $projectRoot = realpath(__DIR__ . '/../..');
 $documentRoot = realpath($_SERVER['DOCUMENT_ROOT'] ?? '');
 $baseUrl = '';
 
-// Coba bangun BASE_URL dari environment variable (Vercel) atau lokasi project di web root.
-$baseUrl = getenv('BASE_URL') ?: '';
-
-if ($baseUrl === '' && $projectRoot !== false && $documentRoot !== false) {
-    $normalizedProjectRoot = str_replace('\\', '/', $projectRoot);
-    $normalizedDocumentRoot = rtrim(str_replace('\\', '/', $documentRoot), '/');
-
-    if ($normalizedDocumentRoot !== '' && strpos($normalizedProjectRoot, $normalizedDocumentRoot) === 0) {
-        $relativePath = trim(substr($normalizedProjectRoot, strlen($normalizedDocumentRoot)), '/');
-        $baseUrl = '/' . trim($relativePath . '/public', '/');
-    }
-}
-
-if ($baseUrl === '') {
-    $baseUrl = '/public';
+// Deteksi BASE_URL: Prioritaskan ENV (Vercel), lalu fallback ke '/public' agar konsisten dengan struktur folder.
+$baseUrl = getenv('BASE_URL');
+if (!$baseUrl) {
+    // Jika di localhost XAMPP biasanya '/Sistem Informasi Siswa/public', 
+    // tapi di cloud/Vercel biasanya cukup '/public' atau domain root.
+    $baseUrl = (strpos($scriptName, '/Sistem%20Informasi%20Siswa/') !== false) 
+        ? '/Sistem%20Informasi%20Siswa/public' 
+        : '/public';
 }
 
 if (!defined('BASE_URL')) {
