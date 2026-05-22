@@ -7,7 +7,7 @@ $host = 'aws-1-ap-southeast-1.pooler.supabase.com';
 $port = '5432';
 $dbName = 'postgres';
 $dbUser = 'postgres.lepbhducicrszlqfcvnz';
-$dbPass = 'MASUKKAN_PASSWORD_SUPABASE_DISINI'; // <-- Ganti dengan password database Supabase kamu
+$dbPass = '+L6aHmcm&B7UxGF'; // <-- Ganti dengan password database Supabase kamu
 
 // Buat koneksi PDO agar query bisa memakai prepared statement.
 try {
