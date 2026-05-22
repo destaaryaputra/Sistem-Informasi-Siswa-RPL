@@ -13,9 +13,19 @@ if ($file === '') {
 // Keamanan: cegah traversal directory
 $file = str_replace('..', '', $file);
 
+// Jika path yang diminta berakhir dengan slash, asumsikan index.php
+if (str_ends_with($file, '/')) {
+    $file .= 'index.php';
+}
+
 $publicPath = __DIR__ . '/../public/' . $file;
 
-// Jika file tidak ditemukan dan tidak punya ekstensi .php, coba tambah .php
+// Jika file tidak ditemukan, coba periksa apakah itu direktori
+if (!file_exists($publicPath) && file_exists($publicPath . '/index.php')) {
+    $publicPath .= '/index.php';
+}
+
+// Jika masih tidak ditemukan dan tidak punya ekstensi .php, coba tambah .php
 if (!file_exists($publicPath) && !str_ends_with($file, '.php')) {
     $publicPath .= '.php';
 }

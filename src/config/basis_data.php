@@ -121,8 +121,6 @@ function rate_limit_decode_attempts(string $attemptsJson): array
 // Ambil status rate limit dari database.
 function rate_limit_db_status(PDO $pdo, string $key, int $maxAttempts, int $windowSeconds): array
 {
-    // ensure_rate_limit_table($pdo); // Dinonaktifkan untuk performa. Pastikan tabel sudah dibuat manual.
-
     $now = time();
     $storageKey = rate_limit_storage_key($key);
     $stmt = $pdo->prepare('SELECT attempts_json, blocked_until FROM tbl_rate_limits WHERE key_hash = ? LIMIT 1');
@@ -153,8 +151,6 @@ function rate_limit_db_status(PDO $pdo, string $key, int $maxAttempts, int $wind
 // Catat kegagalan dan aktifkan blok sementara bila batas tercapai.
 function rate_limit_db_register_failure(PDO $pdo, string $key, int $maxAttempts, int $windowSeconds, int $lockSeconds): array
 {
-    ensure_rate_limit_table($pdo);
-
     $now = time();
     $storageKey = rate_limit_storage_key($key);
     $stmt = $pdo->prepare('SELECT attempts_json, blocked_until FROM tbl_rate_limits WHERE key_hash = ? LIMIT 1');
@@ -202,7 +198,74 @@ function rate_limit_db_register_failure(PDO $pdo, string $key, int $maxAttempts,
 // Hapus data rate limit saat proses berhasil.
 function rate_limit_db_clear(PDO $pdo, string $key): void
 {
-    ensure_rate_limit_table($pdo);
     $stmt = $pdo->prepare('DELETE FROM tbl_rate_limits WHERE key_hash = ?');
     $stmt->execute([rate_limit_storage_key($key)]);
+}
+
+/* ==========================================================================
+   SETUP FUNCTIONS (Hanya jalankan saat inisialisasi database)
+   ========================================================================== */
+
+// Cek keberadaan kolom untuk fallback kompatibilitas skema lama.
+function db_column_exists(PDO $pdo, string $table, string $column): bool
+{
+    static $cache = [];
+    $key = strtolower($table . '.' . $column);
+    if (isset($cache[$key])) {
+        return $cache[$key];
+    }
+
+    $stmt = $pdo->prepare(
+        "SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = ? AND column_name = ? LIMIT 1"
+    );
+    $stmt->execute([strtolower($table), strtolower($column)]);
+    $cache[$key] = (bool) $stmt->fetchColumn();
+
+    return $cache[$key];
+}
+
+// Pastikan tabel dan kolom fitur reset password tersedia.
+function ensure_password_reset_table(PDO $pdo): void
+{
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS tbl_password_reset_tokens (
+            id_reset BIGSERIAL PRIMARY KEY,
+            id_user INT NOT NULL,
+            email VARCHAR(100) NOT NULL,
+            token_hash CHAR(64) NOT NULL UNIQUE,
+            expires_at TIMESTAMP NOT NULL,
+            used_at TIMESTAMP NULL,
+            approved_at TIMESTAMP NULL,
+            approved_by INT NULL,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (id_user) REFERENCES tbl_users(id_user) ON DELETE CASCADE
+        )'
+    );
+
+    $pdo->exec('CREATE INDEX IF NOT EXISTS idx_reset_user ON tbl_password_reset_tokens (id_user)');
+    $pdo->exec('CREATE INDEX IF NOT EXISTS idx_reset_expires ON tbl_password_reset_tokens (expires_at)');
+
+    if (!db_column_exists($pdo, 'tbl_password_reset_tokens', 'approved_at')) {
+        $pdo->exec('ALTER TABLE tbl_password_reset_tokens ADD COLUMN approved_at TIMESTAMP NULL');
+    }
+
+    if (!db_column_exists($pdo, 'tbl_password_reset_tokens', 'approved_by')) {
+        $pdo->exec('ALTER TABLE tbl_password_reset_tokens ADD COLUMN approved_by INT NULL');
+    }
+}
+
+// Pastikan tabel rate limit tersedia.
+function ensure_rate_limit_table(PDO $pdo): void
+{
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS tbl_rate_limits (
+            key_hash CHAR(64) PRIMARY KEY,
+            bucket_label VARCHAR(64) NOT NULL,
+            attempts_json TEXT NOT NULL,
+            blocked_until TIMESTAMP NULL,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        )'
+    );
+    $pdo->exec('CREATE INDEX IF NOT EXISTS idx_rate_limit_blocked_until ON tbl_rate_limits (blocked_until)');
 }
