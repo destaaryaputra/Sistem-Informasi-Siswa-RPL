@@ -5,7 +5,7 @@
   },
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/public/(.*)", "dest": "/public/$1" },
-    { "src": "/(.*)", "dest": "/public/index.php" }
+    { "src": "^/$", "dest": "/public/index.php" },
+    { "src": "/(.*)", "dest": "/public/$1" }
   ]
 }
