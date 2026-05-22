@@ -2251,6 +2251,29 @@ body.login-portal.login-ready .login-field:nth-of-type(2) .login-input-wrap inpu
     width: 100%;
 }
 
+.password-toggle {
+    background: none;
+    border: none;
+    padding: 0 12px;
+    margin-right: 4px;
+    cursor: pointer;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    outline: none;
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+}
+
+.password-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
 .login-submit {
     width: 100%;
     border: 0;
