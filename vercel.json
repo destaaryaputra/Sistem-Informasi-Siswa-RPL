@@ -1,14 +1,11 @@
 {
   "version": 2,
   "functions": {
-    "public/*.php": { "runtime": "vercel-php@0.8.0" },
-    "public/admin/*.php": { "runtime": "vercel-php@0.8.0" },
-    "public/guru/*.php": { "runtime": "vercel-php@0.8.0" },
-    "public/api/*.php": { "runtime": "vercel-php@0.8.0" }
+    "api/**/*.php": { "runtime": "vercel-php@0.8.0" }
   },
   "routes": [
     { "src": "/assets/(.*)", "dest": "/public/assets/$1" },
-    { "src": "/((?!public/).*)", "dest": "/public/$1" },
-    { "src": "/", "dest": "/public/index.php" }
+    { "src": "/favicon.ico", "dest": "/public/favicon.ico" },
+    { "src": "/(.*)", "dest": "/api/bridge.php?file=$1" }
   ]
 }
