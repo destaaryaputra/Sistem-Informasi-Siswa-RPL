@@ -25,24 +25,6 @@ try {
     die("Koneksi database gagal. Cek Environment Variables (ENV) dan pastikan database Supabase aktif. Error: {$errMsg}");
 }
 
-// Cek keberadaan kolom untuk fallback kompatibilitas skema lama.
-function db_column_exists(PDO $pdo, string $table, string $column): bool
-{
-    static $cache = [];
-    $key = strtolower($table . '.' . $column);
-    if (isset($cache[$key])) {
-        return $cache[$key];
-    }
-
-    $stmt = $pdo->prepare(
-        "SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = ? AND column_name = ? LIMIT 1"
-    );
-    $stmt->execute([strtolower($table), strtolower($column)]);
-    $cache[$key] = (bool) $stmt->fetchColumn();
-
-    return $cache[$key];
-}
-
 // Pastikan tabel dan kolom fitur reset password tersedia (kompatibel untuk skema lama/baru).
 function ensure_password_reset_table(PDO $pdo): void
 {
