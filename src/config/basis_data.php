@@ -25,52 +25,6 @@ try {
     die("Koneksi database gagal. Cek Environment Variables (ENV) dan pastikan database Supabase aktif. Error: {$errMsg}");
 }
 
-// Pastikan tabel dan kolom fitur reset password tersedia (kompatibel untuk skema lama/baru).
-function ensure_password_reset_table(PDO $pdo): void
-{
-    $pdo->exec(
-        'CREATE TABLE IF NOT EXISTS tbl_password_reset_tokens (
-            id_reset BIGSERIAL PRIMARY KEY,
-            id_user INT NOT NULL,
-            email VARCHAR(100) NOT NULL,
-            token_hash CHAR(64) NOT NULL UNIQUE,
-            expires_at TIMESTAMP NOT NULL,
-            used_at TIMESTAMP NULL,
-            approved_at TIMESTAMP NULL,
-            approved_by INT NULL,
-            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (id_user) REFERENCES tbl_users(id_user) ON DELETE CASCADE
-        )'
-    );
-
-    $pdo->exec('CREATE INDEX IF NOT EXISTS idx_reset_user ON tbl_password_reset_tokens (id_user)');
-    $pdo->exec('CREATE INDEX IF NOT EXISTS idx_reset_expires ON tbl_password_reset_tokens (expires_at)');
-
-    if (!db_column_exists($pdo, 'tbl_password_reset_tokens', 'approved_at')) {
-        $pdo->exec('ALTER TABLE tbl_password_reset_tokens ADD COLUMN approved_at TIMESTAMP NULL');
-    }
-
-    if (!db_column_exists($pdo, 'tbl_password_reset_tokens', 'approved_by')) {
-        $pdo->exec('ALTER TABLE tbl_password_reset_tokens ADD COLUMN approved_by INT NULL');
-    }
-}
-
-// Pastikan tabel rate limit tersedia untuk proteksi brute-force lintas session.
-function ensure_rate_limit_table(PDO $pdo): void
-{
-    $pdo->exec(
-        'CREATE TABLE IF NOT EXISTS tbl_rate_limits (
-            key_hash CHAR(64) PRIMARY KEY,
-            bucket_label VARCHAR(64) NOT NULL,
-            attempts_json TEXT NOT NULL,
-            blocked_until TIMESTAMP NULL,
-            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-        )'
-    );
-    $pdo->exec('CREATE INDEX IF NOT EXISTS idx_rate_limit_blocked_until ON tbl_rate_limits (blocked_until)');
-}
-
 // Ubah key rate limit menjadi hash agar aman disimpan.
 function rate_limit_storage_key(string $key): string
 {
