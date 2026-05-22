@@ -92,6 +92,7 @@ $notifLabel = (($user['role'] ?? '') === 'admin') ? 'Notifikasi Sistem' : 'Notif
     </style>
     <link rel="icon" href="<?= e(url('favicon.ico')) ?>">
 <link rel="stylesheet" href="<?= e(url('assets/style.css?v=' . $styleVersion)) ?>">
+<script src="<?= e(url('assets/live-feedback.js')) ?>"></script>
 </head>
 <body<?= $bodyClass !== '' ? ' class="' . e($bodyClass) . '"' : '' ?>>
 <header class="topbar">
