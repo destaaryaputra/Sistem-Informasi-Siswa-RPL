@@ -4,8 +4,7 @@
       "public/**/*.php": { "runtime": "vercel-php@0.8.0" }
   },
   "routes": [
-    { "handle": "filesystem" },
-    { "src": "^$", "dest": "/public/index.php" },
+    { "src": "^/$", "dest": "/public/index.php" },
     { "src": "/(.*)", "dest": "/public/$1" }
   ]
 }

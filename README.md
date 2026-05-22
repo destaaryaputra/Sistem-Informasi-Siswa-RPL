@@ -30,10 +30,9 @@ Portal Pemantauan Kehadiran dan Prestasi Akademik Siswa berbasis web yang diranc
 ## 📦 Struktur Folder
 
 ```text
-├── app/            # Logika inti (config, includes)
-├── database/       # Skema Supabase (SQL)
-├── web/            # Halaman UI, CSS, dan API
-└── index.php       # Entry point utama
+├── src/            # Logika inti (config, includes)
+├── public/         # Halaman UI, CSS, dan API
+└── vercel.json     # Konfigurasi deploy Vercel
 ```
 
 ## ⚙️ Instalasi (Supabase + Local)
@@ -44,15 +43,22 @@ Portal Pemantauan Kehadiran dan Prestasi Akademik Siswa berbasis web yang diranc
    ```
 2. **Setup Supabase**:
    - Buat proyek baru di [Supabase](https://supabase.com/).
-   - Buka **SQL Editor** di dashboard Supabase.
-   - Jalankan isi file `database/supabase_schema.sql` (untuk struktur).
-   - Jalankan isi file `database/supabase_data.sql` (untuk data demo).
+   - Buat tabel sesuai kebutuhan aplikasi di SQL Editor Supabase.
 3. **Konfigurasi PHP**:
-   - Buka `app/config/basis_data.php`.
+   - Buka `src/config/basis_data.php`.
    - Masukkan **Password Database** Supabase kamu pada variabel `$dbPass`.
 4. **Jalankan**:
    - Pindahkan folder ke `htdocs` XAMPP.
    - Buka: `http://localhost/Sistem%20Informasi%20Siswa-RPL/`
+
+## ☁️ Deploy ke Vercel (PHP)
+
+1. **Project Settings**:
+   - **Framework Preset**: `Other`
+   - **Root Directory**: repo root (disarankan)
+   - **Build Command**: kosong
+   - **Output Directory**: kosong
+2. Jika **Root Directory** kamu set ke `public`, gunakan `public/vercel.json` (sudah disediakan).
 
 ## 🔐 Akun Demo
 

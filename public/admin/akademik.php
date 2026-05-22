@@ -2,39 +2,13 @@
 
 declare(strict_types=1);
 
-// Modul admin untuk kelola data akademik dan refresh database dari file SQL.
+// Modul admin untuk kelola data akademik.
 require_once __DIR__ . '/../../src/config/bootstrap.php';
 
 require_role(['admin']);
 
 $message = '';
 $error = '';
-
-/**
- * Jalankan file SQL menggunakan PDO exec.
- */
-function run_sql_file(PDO $pdo, string $filePath): void
-{
-    if (!is_file($filePath)) {
-        throw new RuntimeException('File SQL tidak ditemukan: ' . $filePath);
-    }
-
-    $sql = file_get_contents($filePath);
-    if ($sql === false) {
-        throw new RuntimeException('Gagal membaca file SQL: ' . $filePath);
-    }
-
-    $sql = preg_replace('/^\s*--.*$/m', '', $sql);
-    $sql = preg_replace('/\/\*.*?\*\//s', '', $sql);
-    $sql = trim((string) $sql);
-
-    if ($sql === '') {
-        return;
-    }
-
-    // PDO exec bisa menjalankan banyak statement sekaligus jika dipisahkan titik koma.
-    $pdo->exec($sql);
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verify_csrf_token(post_string('csrf_token'))) {
@@ -43,25 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = post_string('action');
 
         try {
-        if ($action === 'reset_data') {
-            // Update database berarti jalankan ulang skema dan seed data dari folder database.
-            $confirmText = post_string('confirm_reset');
-            if ($confirmText !== 'RESET') {
-                throw new RuntimeException('Untuk reset data, ketik RESET dengan huruf kapital.');
-            }
-
-            $schemaPath = __DIR__ . '/../../database/supabase_schema.sql';
-            $seedPath = __DIR__ . '/../../database/supabase_data.sql';
-
-            // Jalankan skema lalu data awal.
-            run_sql_file($pdo, $schemaPath);
-            if (is_file($seedPath)) {
-                run_sql_file($pdo, $seedPath);
-            }
-
-            $message = 'Reset data berhasil. Database sudah diisi ulang dari skema Supabase.';
-        }
-
         if ($action === 'delete_kelas') {
             // Hapus kelas; siswa yang terkait akan mengikuti aturan foreign key database.
             $idKelas = post_int('id_kelas');
@@ -153,29 +108,13 @@ include __DIR__ . '/../../src/includes/header.php';
 ?>
 <section class="card">
     <h2>Manajemen Data Akademik</h2>
-    <p>Modul ini menyelaraskan data kelas, mata pelajaran, dan jadwal seperti rancangan database di laporan.</p>
+    <p>Modul ini menyelaraskan data kelas, mata pelajaran, dan jadwal agar tetap konsisten.</p>
     <?php if ($message): ?>
         <div class="alert success"><?= e($message) ?></div>
     <?php endif; ?>
     <?php if ($error): ?>
         <div class="alert error"><?= e($error) ?></div>
     <?php endif; ?>
-</section>
-
-<section class="card">
-    <h2>Perbarui Basis Data</h2>
-    <p>Tombol ini akan mengisi ulang database dari file <strong>database/skema.sql</strong> dan <strong>database/data_awal.sql</strong>.</p>
-    <form method="post" class="grid reset-inline-form" onsubmit="return confirm('Yakin memperbarui basis data? Tindakan ini tidak bisa dibatalkan.');">
-        <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-        <input type="hidden" name="action" value="reset_data">
-        <div>
-            <label for="confirm_reset">Konfirmasi (ketik RESET)</label>
-            <input id="confirm_reset" name="confirm_reset" placeholder="RESET" required>
-        </div>
-        <div class="form-actions">
-            <button type="submit" class="danger btn-compact">Perbarui Basis Data</button>
-        </div>
-    </form>
 </section>
 
 <div class="content-panels akademik-add-panels">
