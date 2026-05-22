@@ -121,7 +121,7 @@ function rate_limit_decode_attempts(string $attemptsJson): array
 // Ambil status rate limit dari database.
 function rate_limit_db_status(PDO $pdo, string $key, int $maxAttempts, int $windowSeconds): array
 {
-    ensure_rate_limit_table($pdo);
+    // ensure_rate_limit_table($pdo); // Dinonaktifkan untuk performa. Pastikan tabel sudah dibuat manual.
 
     $now = time();
     $storageKey = rate_limit_storage_key($key);
