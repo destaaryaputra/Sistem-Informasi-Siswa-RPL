@@ -2,23 +2,20 @@
 
 declare(strict_types=1);
 
-// Konfigurasi koneksi database utama yang dipakai semua halaman aplikasi.
-$host = '127.0.0.1';
-$dbName = 'portal_siswa';
-$dbUser = 'root';
-$dbPass = '';
+// Konfigurasi koneksi database Supabase (PostgreSQL).
+$host = 'aws-1-ap-southeast-1.pooler.supabase.com';
+$port = '5432';
+$dbName = 'postgres';
+$dbUser = 'postgres.lepbhducicrszlqfcvnz';
+$dbPass = 'MASUKKAN_PASSWORD_SUPABASE_DISINI'; // <-- Ganti dengan password database Supabase kamu
 
 // Buat koneksi PDO agar query bisa memakai prepared statement.
 try {
-    $pdo = new PDO(
-        "mysql:host={$host};dbname={$dbName};charset=utf8mb4",
-        $dbUser,
-        $dbPass,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]
-    );
+    $dsn = "pgsql:host={$host};port={$port};dbname={$dbName}";
+    $pdo = new PDO($dsn, $dbUser, $dbPass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
 } catch (PDOException $e) {
     // Jika koneksi gagal, hentikan aplikasi dengan pesan yang jelas.
     http_response_code(500);
@@ -35,9 +32,9 @@ function db_column_exists(PDO $pdo, string $table, string $column): bool
     }
 
     $stmt = $pdo->prepare(
-        'SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ? LIMIT 1'
+        "SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = ? AND column_name = ? LIMIT 1"
     );
-    $stmt->execute([$table, $column]);
+    $stmt->execute([strtolower($table), strtolower($column)]);
     $cache[$key] = (bool) $stmt->fetchColumn();
 
     return $cache[$key];
@@ -48,27 +45,28 @@ function ensure_password_reset_table(PDO $pdo): void
 {
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS tbl_password_reset_tokens (
-            id_reset BIGINT AUTO_INCREMENT PRIMARY KEY,
+            id_reset BIGSERIAL PRIMARY KEY,
             id_user INT NOT NULL,
             email VARCHAR(100) NOT NULL,
             token_hash CHAR(64) NOT NULL UNIQUE,
-            expires_at DATETIME NOT NULL,
-            used_at DATETIME NULL,
-            approved_at DATETIME NULL,
+            expires_at TIMESTAMP NOT NULL,
+            used_at TIMESTAMP NULL,
+            approved_at TIMESTAMP NULL,
             approved_by INT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            INDEX idx_reset_user (id_user),
-            INDEX idx_reset_expires (expires_at),
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (id_user) REFERENCES tbl_users(id_user) ON DELETE CASCADE
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
+        )'
     );
 
+    $pdo->exec('CREATE INDEX IF NOT EXISTS idx_reset_user ON tbl_password_reset_tokens (id_user)');
+    $pdo->exec('CREATE INDEX IF NOT EXISTS idx_reset_expires ON tbl_password_reset_tokens (expires_at)');
+
     if (!db_column_exists($pdo, 'tbl_password_reset_tokens', 'approved_at')) {
-        $pdo->exec('ALTER TABLE tbl_password_reset_tokens ADD COLUMN approved_at DATETIME NULL AFTER used_at');
+        $pdo->exec('ALTER TABLE tbl_password_reset_tokens ADD COLUMN approved_at TIMESTAMP NULL');
     }
 
     if (!db_column_exists($pdo, 'tbl_password_reset_tokens', 'approved_by')) {
-        $pdo->exec('ALTER TABLE tbl_password_reset_tokens ADD COLUMN approved_by INT NULL AFTER approved_at');
+        $pdo->exec('ALTER TABLE tbl_password_reset_tokens ADD COLUMN approved_by INT NULL');
     }
 }
 
@@ -79,13 +77,13 @@ function ensure_rate_limit_table(PDO $pdo): void
         'CREATE TABLE IF NOT EXISTS tbl_rate_limits (
             key_hash CHAR(64) PRIMARY KEY,
             bucket_label VARCHAR(64) NOT NULL,
-            attempts_json LONGTEXT NOT NULL,
-            blocked_until DATETIME NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            INDEX idx_rate_limit_blocked_until (blocked_until)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
+            attempts_json TEXT NOT NULL,
+            blocked_until TIMESTAMP NULL,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        )'
     );
+    $pdo->exec('CREATE INDEX IF NOT EXISTS idx_rate_limit_blocked_until ON tbl_rate_limits (blocked_until)');
 }
 
 // Ubah key rate limit menjadi hash agar aman disimpan.
@@ -182,10 +180,10 @@ function rate_limit_db_register_failure(PDO $pdo, string $key, int $maxAttempts,
     $upsert = $pdo->prepare(
         'INSERT INTO tbl_rate_limits (key_hash, bucket_label, attempts_json, blocked_until)
          VALUES (?, ?, ?, ?)
-         ON DUPLICATE KEY UPDATE
-             bucket_label = VALUES(bucket_label),
-             attempts_json = VALUES(attempts_json),
-             blocked_until = VALUES(blocked_until),
+         ON CONFLICT (key_hash) DO UPDATE SET
+             bucket_label = EXCLUDED.bucket_label,
+             attempts_json = EXCLUDED.attempts_json,
+             blocked_until = EXCLUDED.blocked_until,
              updated_at = CURRENT_TIMESTAMP'
     );
     $upsert->execute([

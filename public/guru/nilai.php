@@ -128,12 +128,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $savedCount = 0;
         $stmtUpsert = $pdo->prepare(
-            'INSERT INTO tbl_nilai (id_siswa, id_mapel, id_guru, jenis_penilaian, skor, periode) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE skor = VALUES(skor), id_guru = VALUES(id_guru)'
+            'INSERT INTO tbl_nilai (id_siswa, id_mapel, id_guru, jenis_penilaian, skor, periode) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT (id_siswa, id_mapel, jenis_penilaian, periode) DO UPDATE SET skor = EXCLUDED.skor, id_guru = EXCLUDED.id_guru'
         );
 
         $stmtSiswaUser = $pdo->prepare('SELECT id_user, id_orangtua FROM tbl_siswa WHERE id_siswa = ? LIMIT 1');
         $stmtOrtuUser = $pdo->prepare('SELECT id_user FROM tbl_orangtua WHERE id_orangtua = ? LIMIT 1');
-        $stmtNotif = $pdo->prepare('INSERT INTO tbl_notifikasi (id_user, pesan, tanggal) VALUES (?, ?, CURDATE())');
+        $stmtNotif = $pdo->prepare('INSERT INTO tbl_notifikasi (id_user, pesan, tanggal) VALUES (?, ?, CURRENT_DATE)');
 
         foreach ($scores as $idSiswa => $skor) {
             if ($skor === '') {

@@ -1,10 +1,11 @@
 # Sistem Informasi Siswa (Portal Akademik) 🏫
 
 ![PHP](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)
-![MySQL](https://img.shields.io/badge/MySQL-8.0%2B-orange.svg)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15.0%2B-blue.svg)
+![Supabase](https://img.shields.io/badge/Supabase-Cloud-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-Portal Pemantauan Kehadiran dan Prestasi Akademik Siswa berbasis web yang dirancang untuk mempermudah administrasi sekolah (SMP/SMA sederajat). Sistem ini mengintegrasikan data absensi, nilai, laporan, dan notifikasi dalam satu platform terpusat.
+Portal Pemantauan Kehadiran dan Prestasi Akademik Siswa berbasis web yang dirancang untuk mempermudah administrasi sekolah (SMP/SMA sederajat). Sistem ini menggunakan **Supabase (PostgreSQL)** sebagai infrastruktur database cloud.
 
 ## 🚀 Fitur Utama
 
@@ -16,43 +17,42 @@ Portal Pemantauan Kehadiran dan Prestasi Akademik Siswa berbasis web yang diranc
     - Peringatan jika siswa Alpa ≥ 3 kali dalam sebulan.
     - Peringatan jika nilai di bawah KKM (75).
 - **Pelaporan Lengkap**: Rekap absensi dan nilai yang bisa di-**export ke Excel** atau di-**print** langsung.
-- **Keamanan**: Proteksi CSRF, Session Hardening, Rate Limiting login, dan reset password dengan persetujuan Admin.
+- **Keamanan Cloud**: Proteksi CSRF, Session Hardening, Rate Limiting login menggunakan database cloud yang aman.
 - **Dashboard Interaktif**: Ringkasan data yang berbeda untuk setiap peran pengguna.
 
 ## 🛠️ Teknologi yang Digunakan
 
-- **Backend**: PHP Native (PDO & MySQLi)
-- **Database**: MySQL / MariaDB
+- **Backend**: PHP Native (PDO pgsql)
+- **Database**: PostgreSQL (Supabase Cloud)
 - **Frontend**: HTML5, Vanilla CSS3, JavaScript (ES6)
-- **Tools**: XAMPP (Apache)
+- **Deployment**: Local Server (XAMPP/Apache) + Cloud DB (Supabase)
 
 ## 📦 Struktur Folder
 
 ```text
-├── app/            # Logika inti (config, includes, storage)
-├── database/       # Skema dan data awal (SQL)
-├── public/         # Halaman yang dapat diakses publik (CSS, API, UI)
-│   ├── admin/      # Modul Admin
-│   ├── guru/       # Modul Guru
-│   └── assets/     # Aset statis (CSS)
+├── app/            # Logika inti (config, includes)
+├── database/       # Skema Supabase (SQL)
+├── public/         # Halaman UI, CSS, dan API
 └── index.php       # Entry point utama
 ```
 
-## ⚙️ Instalasi (XAMPP)
+## ⚙️ Instalasi (Supabase + Local)
 
 1. **Clone Repositori**:
    ```bash
    git clone https://github.com/destaaryaputra/Sistem-Informasi-Siswa-RPL.git
    ```
-2. **Pindahkan ke htdocs**: Pindahkan folder project ke `C:\xampp\htdocs\`.
-3. **Persiapan Database**:
-   - Buka **phpMyAdmin** (`http://localhost/phpmyadmin`).
-   - Buat database baru bernama `portal_siswa`.
-   - Import file `database/full_database.sql` ke database tersebut.
-4. **Konfigurasi**:
-   - Cek `app/config/basis_data.php` jika username/password MySQL kamu berbeda dari default (`root` tanpa password).
-5. **Jalankan**:
-   - Buka di browser: `http://localhost/Sistem%20Informasi%20Siswa-RPL/`
+2. **Setup Supabase**:
+   - Buat proyek baru di [Supabase](https://supabase.com/).
+   - Buka **SQL Editor** di dashboard Supabase.
+   - Jalankan isi file `database/supabase_schema.sql` (untuk struktur).
+   - Jalankan isi file `database/supabase_data.sql` (untuk data demo).
+3. **Konfigurasi PHP**:
+   - Buka `app/config/basis_data.php`.
+   - Masukkan **Password Database** Supabase kamu pada variabel `$dbPass`.
+4. **Jalankan**:
+   - Pindahkan folder ke `htdocs` XAMPP.
+   - Buka: `http://localhost/Sistem%20Informasi%20Siswa-RPL/`
 
 ## 🔐 Akun Demo
 

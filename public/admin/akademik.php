@@ -11,10 +11,9 @@ $message = '';
 $error = '';
 
 /**
- * Jalankan file SQL seperti import phpMyAdmin menggunakan mysqli multi_query.
+ * Jalankan file SQL menggunakan PDO exec.
  */
-// Import file SQL menggunakan multi_query supaya bisa memproses DROP, CREATE, dan INSERT sekaligus.
-function run_sql_file(mysqli $mysqli, string $filePath): void
+function run_sql_file(PDO $pdo, string $filePath): void
 {
     if (!is_file($filePath)) {
         throw new RuntimeException('File SQL tidak ditemukan: ' . $filePath);
@@ -33,19 +32,8 @@ function run_sql_file(mysqli $mysqli, string $filePath): void
         return;
     }
 
-    if (!$mysqli->multi_query($sql)) {
-        throw new RuntimeException('Gagal menjalankan file SQL: ' . $filePath);
-    }
-
-    do {
-        if ($result = $mysqli->store_result()) {
-            $result->free();
-        }
-    } while ($mysqli->more_results() && $mysqli->next_result());
-
-    if ($mysqli->errno !== 0) {
-        throw new RuntimeException('MySQL error saat import file SQL: ' . $mysqli->error);
-    }
+    // PDO exec bisa menjalankan banyak statement sekaligus jika dipisahkan titik koma.
+    $pdo->exec($sql);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -62,19 +50,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new RuntimeException('Untuk reset data, ketik RESET dengan huruf kapital.');
             }
 
-            $schemaPath = __DIR__ . '/../../database/skema.sql';
-            $seedPath = __DIR__ . '/../../database/data_awal.sql';
+            $schemaPath = __DIR__ . '/../../database/supabase_schema.sql';
+            $seedPath = __DIR__ . '/../../database/supabase_data.sql';
 
-            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-            $mysqli = new mysqli('127.0.0.1', 'root', '', 'mysql');
-            $mysqli->set_charset('utf8mb4');
+            // Jalankan skema lalu data awal.
+            run_sql_file($pdo, $schemaPath);
+            if (is_file($seedPath)) {
+                run_sql_file($pdo, $seedPath);
+            }
 
-            run_sql_file($mysqli, $schemaPath);
-            run_sql_file($mysqli, $seedPath);
-
-            $mysqli->close();
-
-            $message = 'Reset data berhasil. Database sudah diisi ulang dari skema.sql dan data_awal.sql.';
+            $message = 'Reset data berhasil. Database sudah diisi ulang dari skema Supabase.';
         }
 
         if ($action === 'delete_kelas') {

@@ -68,16 +68,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $formAction === 'save_absensi') {
     } else {
         $stmtSiswaUser = $pdo->prepare('SELECT id_user, id_orangtua FROM tbl_siswa WHERE id_siswa = ? LIMIT 1');
         $stmtOrtuUser = $pdo->prepare('SELECT id_user FROM tbl_orangtua WHERE id_orangtua = ? LIMIT 1');
-        $stmtNotif = $pdo->prepare('INSERT INTO tbl_notifikasi (id_user, pesan, tanggal) VALUES (?, ?, CURDATE())');
+        $stmtNotif = $pdo->prepare('INSERT INTO tbl_notifikasi (id_user, pesan, tanggal) VALUES (?, ?, CURRENT_DATE)');
         $stmtCountAlpa = $pdo->prepare(
             "SELECT COUNT(*) FROM tbl_kehadiran
              WHERE id_siswa = ?
                AND status = 'alpa'
-               AND DATE_FORMAT(tanggal, '%Y-%m') = DATE_FORMAT(?, '%Y-%m')"
+               AND TO_CHAR(tanggal, 'YYYY-MM') = TO_CHAR(?::DATE, 'YYYY-MM')"
         );
 
         $stmt = $pdo->prepare(
-            'INSERT INTO tbl_kehadiran (id_siswa, id_guru, id_mapel, tanggal, status) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE id_guru = VALUES(id_guru), status = VALUES(status)'
+            'INSERT INTO tbl_kehadiran (id_siswa, id_guru, id_mapel, tanggal, status) VALUES (?, ?, ?, ?, ?) ON CONFLICT (id_siswa, tanggal, id_mapel) DO UPDATE SET id_guru = EXCLUDED.id_guru, status = EXCLUDED.status'
         );
 
         foreach ($statuses as $idSiswa => $status) {
