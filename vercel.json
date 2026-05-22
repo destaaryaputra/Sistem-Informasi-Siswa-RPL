@@ -9,6 +9,14 @@
       "handle": "filesystem"
     },
     {
+      "src": "/public/(.*)",
+      "dest": "/public/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/index.php"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.php"
     }
