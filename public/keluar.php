@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // Logout: kosongkan session dan kembali ke halaman login.
-require_once __DIR__ . '/../app/config/otentikasi.php';
+require_once __DIR__ . '/../src/config/otentikasi.php';
 
 $_SESSION = [];
 if (ini_get('session.use_cookies')) {

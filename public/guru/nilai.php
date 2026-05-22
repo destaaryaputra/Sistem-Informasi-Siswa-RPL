@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // Input nilai guru dengan pengiriman notifikasi jika skor di bawah KKM.
-require_once __DIR__ . '/../../app/config/bootstrap.php';
+require_once __DIR__ . '/../../src/config/bootstrap.php';
 
 require_role(['guru']);
 
@@ -198,7 +198,7 @@ if ($selectedKelas > 0 && $selectedMapel > 0 && $periode !== '') {
 }
 
 $title = 'Input Nilai';
-include __DIR__ . '/../../app/includes/header.php';
+include __DIR__ . '/../../src/includes/header.php';
 ?>
 <section class="card">
     <h2>Input Nilai Siswa</h2>
@@ -315,4 +315,4 @@ include __DIR__ . '/../../app/includes/header.php';
     updateHint();
 })();
 </script>
-<?php include __DIR__ . '/../../app/includes/footer.php'; ?>
+<?php include __DIR__ . '/../../src/includes/footer.php'; ?>

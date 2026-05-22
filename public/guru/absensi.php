@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // Form input absensi guru dengan validasi kelas, mapel, dan notifikasi otomatis.
-require_once __DIR__ . '/../../app/config/bootstrap.php';
+require_once __DIR__ . '/../../src/config/bootstrap.php';
 
 require_role(['guru']);
 
@@ -133,7 +133,7 @@ if ($selectedKelas > 0 && $selectedMapel > 0 && $selectedTanggal) {
 }
 
 $title = 'Input Kehadiran';
-include __DIR__ . '/../../app/includes/header.php';
+include __DIR__ . '/../../src/includes/header.php';
 ?>
 <section class="card">
     <h2>Input Kehadiran</h2>
@@ -218,4 +218,4 @@ include __DIR__ . '/../../app/includes/header.php';
     </form>
     <?php endif; ?>
 </section>
-<?php include __DIR__ . '/../../app/includes/footer.php'; ?>
+<?php include __DIR__ . '/../../src/includes/footer.php'; ?>

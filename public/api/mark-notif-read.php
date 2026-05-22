@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // API endpoint untuk menandai notifikasi sebagai sudah dibaca.
-require_once __DIR__ . '/../../app/config/bootstrap.php';
+require_once __DIR__ . '/../../src/config/bootstrap.php';
 
 require_login();
 

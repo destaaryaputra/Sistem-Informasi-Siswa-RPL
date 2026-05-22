@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // Modul admin untuk kelola data akademik dan refresh database dari file SQL.
-require_once __DIR__ . '/../../app/config/bootstrap.php';
+require_once __DIR__ . '/../../src/config/bootstrap.php';
 
 require_role(['admin']);
 
@@ -149,7 +149,7 @@ $jadwalList = $pdo->query(
 )->fetchAll();
 
 $title = 'Data Akademik';
-include __DIR__ . '/../../app/includes/header.php';
+include __DIR__ . '/../../src/includes/header.php';
 ?>
 <section class="card">
     <h2>Manajemen Data Akademik</h2>
@@ -387,4 +387,4 @@ include __DIR__ . '/../../app/includes/header.php';
     </table>
     </div>
 </section>
-<?php include __DIR__ . '/../../app/includes/footer.php'; ?>
+<?php include __DIR__ . '/../../src/includes/footer.php'; ?>

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // Dashboard role-based yang menampilkan ringkasan sesuai jenis akun.
-require_once __DIR__ . '/../app/config/bootstrap.php';
+require_once __DIR__ . '/../src/config/bootstrap.php';
 
 require_login();
 
@@ -55,7 +55,7 @@ if ($role === 'admin') {
 }
 
 $title = 'Dasbor';
-include __DIR__ . '/../app/includes/header.php';
+include __DIR__ . '/../src/includes/header.php';
 ?>
 <div class="card hero-card dashboard-welcome">
     <h2>Selamat datang, <?= e($name) ?></h2>
@@ -397,4 +397,4 @@ include __DIR__ . '/../app/includes/header.php';
 </script>
 <?php endif; ?>
 
-<?php include __DIR__ . '/../app/includes/footer.php'; ?>
+<?php include __DIR__ . '/../src/includes/footer.php'; ?>

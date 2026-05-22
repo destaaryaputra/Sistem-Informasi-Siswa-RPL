@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // Modul admin untuk menambah dan menghapus user sesuai role.
-require_once __DIR__ . '/../../app/config/bootstrap.php';
+require_once __DIR__ . '/../../src/config/bootstrap.php';
 
 require_role(['admin']);
 
@@ -273,7 +273,7 @@ $resetRequests = $pdo->query("SELECT pr.id_reset, pr.email, pr.created_at, pr.ex
     ORDER BY pr.created_at DESC")->fetchAll();
 
 $title = 'Manajemen Pengguna';
-include __DIR__ . '/../../app/includes/header.php';
+include __DIR__ . '/../../src/includes/header.php';
 ?>
 <section class="card">
     <h2>Tambah Pengguna</h2>
@@ -607,4 +607,4 @@ include __DIR__ . '/../../app/includes/header.php';
     });
 })();
 </script>
-<?php include __DIR__ . '/../../app/includes/footer.php'; ?>
+<?php include __DIR__ . '/../../src/includes/footer.php'; ?>

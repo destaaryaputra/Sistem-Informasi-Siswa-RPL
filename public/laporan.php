@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // Halaman laporan untuk rekap absensi, nilai, detail ketidakhadiran, dan notifikasi.
-require_once __DIR__ . '/../app/config/bootstrap.php';
+require_once __DIR__ . '/../src/config/bootstrap.php';
 
 require_login();
 
@@ -612,7 +612,7 @@ if ($printMode) {
 }
 
 $title = 'Laporan Akademik';
-include __DIR__ . '/../app/includes/header.php';
+include __DIR__ . '/../src/includes/header.php';
 ?>
 <div class="content-panels report-stack">
 <section class="card panel-span-12 report-header-card">
@@ -906,4 +906,4 @@ include __DIR__ . '/../app/includes/header.php';
     });
 })();
 </script>
-<?php include __DIR__ . '/../app/includes/footer.php'; ?>
+<?php include __DIR__ . '/../src/includes/footer.php'; ?>

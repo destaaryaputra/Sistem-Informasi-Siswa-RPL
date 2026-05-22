@@ -1,12 +1,11 @@
 {
   "version": 2,
   "functions": {
-    "index.php": { "runtime": "vercel-php@0.6.0" },
-    "web/**/*.php": { "runtime": "vercel-php@0.6.0" }
+      "public/**/*.php": { "runtime": "vercel-php@0.8.0" }
   },
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/web/(.*)", "dest": "/web/$1" },
-    { "src": "/(.*)", "dest": "/index.php" }
+    { "src": "/public/(.*)", "dest": "/public/$1" },
+    { "src": "/(.*)", "dest": "/public/index.php" }
   ]
 }

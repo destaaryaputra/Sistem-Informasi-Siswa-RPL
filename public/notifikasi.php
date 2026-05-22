@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // Halaman inbox notifikasi pribadi untuk user yang sedang login.
-require_once __DIR__ . '/../app/config/bootstrap.php';
+require_once __DIR__ . '/../src/config/bootstrap.php';
 
 require_login();
 
@@ -99,7 +99,7 @@ if ($backCandidate !== '') {
 }
 
 $title = $pageTitle;
-include __DIR__ . '/../app/includes/header.php';
+include __DIR__ . '/../src/includes/header.php';
 ?>
 
     <div class="notification-page">
@@ -250,4 +250,4 @@ include __DIR__ . '/../app/includes/header.php';
 })();
 </script>
 
-<?php include __DIR__ . '/../app/includes/footer.php'; ?>
+<?php include __DIR__ . '/../src/includes/footer.php'; ?>
