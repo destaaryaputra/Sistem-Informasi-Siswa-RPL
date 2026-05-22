@@ -24,8 +24,10 @@ $projectRoot = realpath(__DIR__ . '/../..');
 $documentRoot = realpath($_SERVER['DOCUMENT_ROOT'] ?? '');
 $baseUrl = '';
 
-// Coba bangun BASE_URL dari lokasi project di web root agar link tetap konsisten.
-if ($projectRoot !== false && $documentRoot !== false) {
+// Coba bangun BASE_URL dari environment variable (Vercel) atau lokasi project di web root.
+$baseUrl = getenv('BASE_URL') ?: '';
+
+if ($baseUrl === '' && $projectRoot !== false && $documentRoot !== false) {
     $normalizedProjectRoot = str_replace('\\', '/', $projectRoot);
     $normalizedDocumentRoot = rtrim(str_replace('\\', '/', $documentRoot), '/');
 
@@ -36,18 +38,7 @@ if ($projectRoot !== false && $documentRoot !== false) {
 }
 
 if ($baseUrl === '') {
-    $publicPos = strpos($scriptName, '/public/');
-    $appPos = strpos($scriptName, '/app/');
-
-    if ($publicPos !== false) {
-        $baseUrl = rtrim(substr($scriptName, 0, $publicPos), '/') . '/public';
-    } elseif ($appPos !== false) {
-        $baseUrl = rtrim(substr($scriptName, 0, $appPos), '/') . '/public';
-    }
-}
-
-if ($baseUrl === '') {
-    $baseUrl = '/Sistem%20Informasi%20Siswa/public';
+    $baseUrl = '/public';
 }
 
 if (!defined('BASE_URL')) {
