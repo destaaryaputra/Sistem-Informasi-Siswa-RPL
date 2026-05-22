@@ -55,10 +55,13 @@ Portal Pemantauan Kehadiran dan Prestasi Akademik Siswa berbasis web yang diranc
 
 1. **Project Settings**:
    - **Framework Preset**: `Other`
-   - **Root Directory**: repo root (disarankan)
+   - **Root Directory**: **Biarkan kosong** (atau set ke repo root). Jangan set ke `public` karena folder `src` akan tertinggal.
    - **Build Command**: kosong
    - **Output Directory**: kosong
-2. Jika **Root Directory** kamu set ke `public`, gunakan `public/vercel.json` (sudah disediakan).
+2. **Environment Variables**:
+   - Pastikan kamu sudah menambahkan `DB_HOST`, `DB_USER`, `DB_PASS`, dll. di dashboard Vercel sesuai dengan kredensial Supabase kamu.
+3. **Deployment**:
+   - Vercel akan secara otomatis menggunakan `vercel.json` yang ada di root untuk mengarahkan trafik ke folder `public`.
 
 ## 🔐 Akun Demo
 
