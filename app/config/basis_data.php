@@ -12,7 +12,8 @@ $dbPass = getenv('DB_PASS') ?: '+L6aHmcm&B7UxGF';
 
 // Buat koneksi PDO agar query bisa memakai prepared statement.
 try {
-    $dsn = "pgsql:host={$host};port={$port};dbname={$dbName}";
+    // Tambahkan sslmode=require karena Supabase mewajibkan koneksi SSL di beberapa region/pooler.
+    $dsn = "pgsql:host={$host};port={$port};dbname={$dbName};sslmode=require";
     $pdo = new PDO($dsn, $dbUser, $dbPass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
