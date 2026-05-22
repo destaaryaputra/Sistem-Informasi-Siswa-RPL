@@ -40,7 +40,7 @@ app/
 
 index.php       # Entry point utama di root project
 
-public/
+web/
    admin/        # Halaman admin
    api/          # Endpoint JSON
    assets/       # CSS dan aset statis
@@ -153,7 +153,7 @@ Halaman laporan menyediakan:
 
 Cara memakai export/print:
 
-1. Buka [laporan.php](../public/laporan.php).
+1. Buka [laporan.php](../web/laporan.php).
 2. Pilih filter yang dibutuhkan.
 3. Klik export Excel bila ingin file `.xls`.
 4. Klik print bila ingin mode cetak.
@@ -189,12 +189,12 @@ Catatan:
 - Konfigurasi autentikasi: [app/config/otentikasi.php](app/config/otentikasi.php)
 - Konfigurasi database: [app/config/basis_data.php](app/config/basis_data.php)
 - Header/footer bersama: [app/includes/header.php](app/includes/header.php) dan [app/includes/footer.php](app/includes/footer.php)
-- Login: [public/masuk.php](public/masuk.php)
-- Dashboard: [public/dasbor.php](public/dasbor.php)
-- Laporan: [public/laporan.php](public/laporan.php)
-- Notifikasi: [public/notifikasi.php](public/notifikasi.php)
-- Lupa password: [public/lupa-password.php](public/lupa-password.php)
-- Reset password: [public/reset-password.php](public/reset-password.php)
+- Login: [web/masuk.php](web/masuk.php)
+- Dashboard: [web/dasbor.php](web/dasbor.php)
+- Laporan: [web/laporan.php](web/laporan.php)
+- Notifikasi: [web/notifikasi.php](web/notifikasi.php)
+- Lupa password: [web/lupa-password.php](web/lupa-password.php)
+- Reset password: [web/reset-password.php](web/reset-password.php)
 - Skema database: [database/skema.sql](database/skema.sql)
 - Seed data: [database/data_awal.sql](database/data_awal.sql)
 

@@ -32,7 +32,7 @@ Portal Pemantauan Kehadiran dan Prestasi Akademik Siswa berbasis web yang diranc
 ```text
 ├── app/            # Logika inti (config, includes)
 ├── database/       # Skema Supabase (SQL)
-├── public/         # Halaman UI, CSS, dan API
+├── web/            # Halaman UI, CSS, dan API
 └── index.php       # Entry point utama
 ```
 
