@@ -39,7 +39,7 @@ Portal Pemantauan Kehadiran dan Prestasi Akademik Siswa berbasis web yang diranc
 
 1. **Clone Repositori**:
    ```bash
-   git clone https://github.com/destaaryaputra/Sistem-Informasi-Siswa-RPL.git
+   git clone https://github.com/destaaryaputra/Sistem-Informasi-Siswa.git
    ```
 2. **Setup Supabase**:
    - Buat proyek baru di [Supabase](https://supabase.com/).
