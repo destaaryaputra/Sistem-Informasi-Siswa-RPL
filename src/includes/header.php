@@ -90,7 +90,7 @@ $notifLabel = (($user['role'] ?? '') === 'admin') ? 'Notifikasi Sistem' : 'Notif
             scrollbar-gutter: stable;
         }
     </style>
-    <link rel="icon" href="<?= e(url('favicon.ico')) ?>">
+    <link rel="icon" type="image/svg+xml" href="<?= e(url('assets/logo.svg')) ?>">
 <link rel="stylesheet" href="<?= e(url('assets/style.css?v=' . $styleVersion)) ?>">
 <script src="<?= e(url('assets/live-feedback.js')) ?>"></script>
 </head>

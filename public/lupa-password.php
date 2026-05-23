@@ -203,6 +203,7 @@ if (request_method_is('POST')) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password - Sistem Informasi Siswa</title>
+    <link rel="icon" type="image/svg+xml" href="<?= e(url('assets/logo.svg')) ?>">
     <link rel="stylesheet" href="<?= e(url('assets/style.css?v=' . $styleVersion)) ?>">
 </head>
 <body class="login-portal login-ready">

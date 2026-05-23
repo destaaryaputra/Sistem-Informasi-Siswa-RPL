@@ -134,6 +134,7 @@ if (request_method_is('POST')) {
             scrollbar-gutter: stable;
         }
     </style>
+    <link rel="icon" type="image/svg+xml" href="<?= e(url('assets/logo.svg')) ?>">
     <link rel="stylesheet" href="<?= e(url('assets/style.css?v=' . $styleVersion)) ?>">
     <noscript>
         <style>
