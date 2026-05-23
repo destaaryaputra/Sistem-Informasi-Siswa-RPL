@@ -2314,10 +2314,21 @@ body.login-portal.login-ready .login-field:nth-of-type(2) .login-input-wrap inpu
     transition: color 0.2s;
     outline: none;
     flex-shrink: 0;
+    box-shadow: none;
+    min-height: unset;
+    animation: none;
 }
 
 .password-toggle:hover {
     color: var(--primary);
+    transform: none;
+    box-shadow: none;
+    filter: none;
+}
+
+.password-toggle:active {
+    transform: none;
+    box-shadow: none;
 }
 
 .password-toggle svg {
