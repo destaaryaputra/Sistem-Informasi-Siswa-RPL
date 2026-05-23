@@ -110,9 +110,18 @@ if (request_method_is('POST') && $error === '') {
 <body class="login-portal login-ready">
 <header class="login-header">
     <div class="login-shell login-header-row">
-        <div class="login-brand-text">
-            <h1>SISTEM INFORMASI SISWA</h1>
-            <p>Atur ulang password akun Anda</p>
+        <div class="login-brand">
+            <div class="login-shield" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 10L12 5L2 10L12 15L22 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6 12.5V15C6 15 8.5 17 12 17C15.5 17 18 15 18 15V12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 10V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="login-brand-text">
+                <h1>SISTEM INFORMASI SISWA</h1>
+                <p>Atur ulang password akun Anda</p>
+            </div>
         </div>
     </div>
 </header>

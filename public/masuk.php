@@ -152,8 +152,9 @@ if (request_method_is('POST')) {
         <div class="login-brand">
             <div class="login-shield" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L19 5V11C19 15.4 15.9 19.4 12 20.5C8.1 19.4 5 15.4 5 11V5L12 2Z" stroke="currentColor" stroke-width="1.8"/>
-                    <path d="M9.2 11.8L11.1 13.7L14.9 9.9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 10L12 5L2 10L12 15L22 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6 12.5V15C6 15 8.5 17 12 17C15.5 17 18 15 18 15V12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 10V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
             <div class="login-brand-text">

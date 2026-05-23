@@ -98,8 +98,17 @@ $notifLabel = (($user['role'] ?? '') === 'admin') ? 'Notifikasi Sistem' : 'Notif
 <header class="topbar">
     <div class="container topbar-inner">
         <div class="brand-lockup">
-            <p class="brand-kicker">EduTrack Sekolah</p>
-            <h1>Sistem Pemantauan Kehadiran dan Prestasi Siswa</h1>
+            <div class="brand-logo" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 10L12 5L2 10L12 15L22 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6 12.5V15C6 15 8.5 17 12 17C15.5 17 18 15 18 15V12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 10V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <p class="brand-kicker">EduTrack Sekolah</p>
+                <h1>Sistem Pemantauan Kehadiran dan Prestasi Siswa</h1>
+            </div>
         </div>
         <?php if ($user): ?>
             <div class="topbar-meta">

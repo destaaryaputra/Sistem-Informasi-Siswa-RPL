@@ -266,10 +266,45 @@ body {
 }
 
 .brand-lockup {
-    display: grid;
-    gap: 4px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
     min-width: 0;
     flex: 1 1 auto;
+}
+
+.brand-logo {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.brand-logo svg {
+    width: 26px;
+    height: 26px;
+}
+
+.brand-text {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.brand-text h1 {
+    font-size: clamp(18px, 1.8vw, 24px);
+    margin: 0;
+    line-height: 1.2;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .brand-kicker {
