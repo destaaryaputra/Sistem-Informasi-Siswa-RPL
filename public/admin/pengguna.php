@@ -377,7 +377,7 @@ include __DIR__ . '/../../src/includes/header.php';
                     <td><?= e((string) $request['created_at']) ?></td>
                     <td><?= e((string) $request['expires_at']) ?></td>
                     <td>
-                        <form method="post" onsubmit="return confirm('Setujui permintaan reset password ini?');">
+                        <form method="post" data-confirm="Setujui permintaan reset password ini?">
                             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                             <input type="hidden" name="approve_reset_request_id" value="<?= e((string) $request['id_reset']) ?>">
                             <button type="submit">Setujui</button>
@@ -432,7 +432,7 @@ include __DIR__ . '/../../src/includes/header.php';
                 <td><?= e($u['created_at']) ?></td>
                 <td>
                     <?php if ((int) $u['id_user'] !== $currentUserId): ?>
-                        <form method="post" onsubmit="return confirm('Hapus pengguna ini? Data terkait akan ikut terhapus sesuai relasi.');">
+                        <form method="post" data-confirm="Hapus pengguna ini? Data terkait akan ikut terhapus sesuai relasi.">
                             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                             <input type="hidden" name="delete_user_id" value="<?= e((string) $u['id_user']) ?>">
                             <button type="submit" class="danger">Hapus</button>
@@ -473,7 +473,7 @@ include __DIR__ . '/../../src/includes/header.php';
                 <td><?= e((string) ($ortu['kontak'] ?? '-')) ?></td>
                 <td>
                     <?php if ((int) $ortu['id_user'] !== $currentUserId): ?>
-                        <form method="post" onsubmit="return confirm('Hapus user orang tua ini? Data terkait akan ikut terhapus sesuai relasi.');">
+                        <form method="post" data-confirm="Hapus user orang tua ini? Data terkait akan ikut terhapus sesuai relasi.">
                             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                             <input type="hidden" name="delete_user_id" value="<?= e((string) $ortu['id_user']) ?>">
                             <button type="submit" class="danger">Hapus</button>
@@ -522,7 +522,7 @@ include __DIR__ . '/../../src/includes/header.php';
                 </td>
                 <td>
                     <?php if ((int) $siswa['id_user'] !== $currentUserId): ?>
-                        <form method="post" onsubmit="return confirm('Hapus user siswa ini? Data terkait akan ikut terhapus sesuai relasi.');">
+                        <form method="post" data-confirm="Hapus user siswa ini? Data terkait akan ikut terhapus sesuai relasi.">
                             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                             <input type="hidden" name="delete_user_id" value="<?= e((string) $siswa['id_user']) ?>">
                             <button type="submit" class="danger">Hapus</button>

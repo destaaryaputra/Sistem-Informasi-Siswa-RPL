@@ -236,7 +236,7 @@ include __DIR__ . '/../../src/includes/header.php';
                 <td><?= e($kelas['nama_kelas']) ?></td>
                 <td><?= e($kelas['tingkat']) ?></td>
                 <td>
-                    <form method="post" onsubmit="return confirm('Hapus kelas ini? Siswa akan tetap ada tetapi kelasnya akan kosong.');">
+                    <form method="post" data-confirm="Hapus kelas ini? Siswa akan tetap ada tetapi kelasnya akan kosong.">
                         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                         <input type="hidden" name="action" value="delete_kelas">
                         <input type="hidden" name="id_kelas" value="<?= e((string) $kelas['id_kelas']) ?>">
@@ -270,7 +270,7 @@ include __DIR__ . '/../../src/includes/header.php';
                 <td><?= e((string) $mapel['id_mapel']) ?></td>
                 <td><?= e($mapel['nama_mapel']) ?></td>
                 <td>
-                    <form method="post" onsubmit="return confirm('Hapus mata pelajaran ini? Data jadwal, kehadiran, dan nilai terkait akan ikut terhapus.');">
+                    <form method="post" data-confirm="Hapus mata pelajaran ini? Data jadwal, kehadiran, dan nilai terkait akan ikut terhapus.">
                         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                         <input type="hidden" name="action" value="delete_mapel">
                         <input type="hidden" name="id_mapel" value="<?= e((string) $mapel['id_mapel']) ?>">
@@ -313,7 +313,7 @@ include __DIR__ . '/../../src/includes/header.php';
                 <td><?= e($jadwal['hari']) ?></td>
                 <td><?= e($jadwal['jam']) ?></td>
                 <td>
-                    <form method="post" onsubmit="return confirm('Hapus jadwal ini?');">
+                    <form method="post" data-confirm="Hapus jadwal ini?">
                         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                         <input type="hidden" name="action" value="delete_jadwal">
                         <input type="hidden" name="id_jadwal" value="<?= e((string) $jadwal['id_jadwal']) ?>">

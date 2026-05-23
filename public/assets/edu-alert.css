@@ -1,0 +1,121 @@
+/* EduAlert: Custom Modal Styles */
+.edu-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    padding: 20px;
+}
+
+.edu-modal-overlay.is-visible {
+    opacity: 1;
+}
+
+.edu-modal-box {
+    background: #fff;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: scale(0.9);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+    border: 1px solid rgba(15, 94, 168, 0.1);
+}
+
+.edu-modal-overlay.is-visible .edu-modal-box {
+    transform: scale(1);
+}
+
+.edu-modal-header {
+    padding: 24px 24px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.edu-modal-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+
+.edu-modal-icon.info { background: #e0f2fe; color: #0369a1; }
+.edu-modal-icon.success { background: #dcfce7; color: #15803d; }
+.edu-modal-icon.warning { background: #ffefcc; color: #b45309; }
+.edu-modal-icon.danger { background: #fee2e2; color: #b91c1c; }
+
+.edu-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.edu-modal-body {
+    padding: 0 24px 24px;
+    color: #475569;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.edu-modal-footer {
+    padding: 16px 24px 24px;
+    background: #f8fafc;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.edu-modal-btn {
+    min-height: 40px;
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+}
+
+.edu-modal-btn.cancel {
+    background: #fff;
+    border-color: #cbd5e1;
+    color: #475569;
+}
+
+.edu-modal-btn.cancel:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.edu-modal-btn.confirm {
+    background: var(--primary);
+    color: #fff;
+}
+
+.edu-modal-btn.confirm:hover {
+    background: var(--primary-deep);
+    transform: translateY(-1px);
+}
+
+.edu-modal-btn.confirm.danger {
+    background: #dc2626;
+}
+
+.edu-modal-btn.confirm.danger:hover {
+    background: #b91c1c;
+}

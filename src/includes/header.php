@@ -92,6 +92,8 @@ $notifLabel = (($user['role'] ?? '') === 'admin') ? 'Notifikasi Sistem' : 'Notif
     </style>
     <link rel="icon" type="image/svg+xml" href="<?= e(url('assets/logo.svg')) ?>">
 <link rel="stylesheet" href="<?= e(url('assets/style.css?v=' . $styleVersion)) ?>">
+<link rel="stylesheet" href="<?= e(url('assets/edu-alert.css')) ?>">
+<script src="<?= e(url('assets/edu-alert.js')) ?>"></script>
 <script src="<?= e(url('assets/live-feedback.js')) ?>"></script>
 </head>
 <body<?= $bodyClass !== '' ? ' class="' . e($bodyClass) . '"' : '' ?>>
