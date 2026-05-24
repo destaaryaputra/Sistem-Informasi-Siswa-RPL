@@ -179,6 +179,46 @@ main.container.app-content,
     animation: slideUpFade 0.24s ease-out both;
 }
 
+/* Scroll reveal: replay saat elemen keluar/masuk viewport lagi. */
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(22px) scale(0.985);
+    transition:
+        opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+    animation: none !important;
+}
+
+/* Hilangkan delay bertingkat yang membuat navigasi terasa lambat. */
+.content-panels > .card,
+.grid > .stat,
+table tbody tr,
+form > div label,
+form > div input,
+form > div select,
+form > div textarea {
+    animation-delay: 0ms !important;
+}
+
+.scroll-reveal[data-reveal="top"] {
+    transform: translateY(-24px) scale(0.985);
+}
+
+.scroll-reveal[data-reveal="middle"] {
+    transform: scale(0.985);
+}
+
+.scroll-reveal[data-reveal="bottom"] {
+    transform: translateY(24px) scale(0.985);
+}
+
+.scroll-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* Struktur dasar halaman untuk semua template. */
 body {
     margin: 0;
@@ -1709,6 +1749,14 @@ tbody tr td:first-child:not(:empty) {
         animation-iteration-count: 1 !important;
         transition-duration: 1ms !important;
         scroll-behavior: auto !important;
+    }
+
+    .scroll-reveal,
+    .scroll-reveal[data-reveal="top"],
+    .scroll-reveal[data-reveal="middle"],
+    .scroll-reveal[data-reveal="bottom"] {
+        opacity: 1 !important;
+        transform: none !important;
     }
 }
 
