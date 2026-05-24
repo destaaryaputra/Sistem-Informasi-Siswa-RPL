@@ -2354,6 +2354,10 @@ body.login-portal.login-ready .login-field:nth-of-type(2) .login-input-wrap inpu
     animation: none;
 }
 
+.password-toggle:focus-visible {
+    outline: none;
+}
+
 .password-toggle:hover {
     color: var(--primary);
     transform: none;
