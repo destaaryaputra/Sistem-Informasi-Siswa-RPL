@@ -5,7 +5,7 @@ declare(strict_types=1);
 // Konfigurasi koneksi database Supabase (PostgreSQL).
 // Prioritaskan environment variables (untuk Vercel/Production), fallback ke nilai default untuk local.
 $host = getenv('DB_HOST') ?: 'aws-1-ap-southeast-1.pooler.supabase.com';
-$port = getenv('DB_PORT') ?: '5432';
+$port = getenv('DB_PORT') ?: '6543';
 $dbName = getenv('DB_NAME') ?: 'postgres';
 $dbUser = getenv('DB_USER') ?: 'postgres.lepbhducicrszlqfcvnz';
 $dbPass = getenv('DB_PASS') ?: '+L6aHmcm&B7UxGF';
