@@ -299,61 +299,6 @@ if (request_method_is('POST')) {
     const body = document.body;
     let revealed = false;
 
-    const initScrollReveal = () => {
-        if (!('IntersectionObserver' in window)) {
-            return;
-        }
-
-        const targets = Array.from(document.querySelectorAll([
-            '.login-header-row',
-            '.login-left',
-            '.login-feature-item',
-            '.login-right',
-            '.login-field',
-            '.login-submit'
-        ].join(',')));
-
-        if (!targets.length) {
-            return;
-        }
-
-        const assignDirection = (el) => {
-            const rect = el.getBoundingClientRect();
-            const vh = window.innerHeight || document.documentElement.clientHeight;
-            const center = rect.top + (rect.height / 2);
-
-            if (center < vh * 0.33) {
-                el.dataset.reveal = 'top';
-            } else if (center > vh * 0.67) {
-                el.dataset.reveal = 'bottom';
-            } else {
-                el.dataset.reveal = 'middle';
-            }
-        };
-
-        targets.forEach((el, i) => {
-            el.classList.add('scroll-reveal');
-            el.style.setProperty('--reveal-delay', (i % 4) * 55 + 'ms');
-            assignDirection(el);
-        });
-
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    assignDirection(entry.target);
-                    entry.target.classList.add('is-visible');
-                } else {
-                    entry.target.classList.remove('is-visible');
-                }
-            });
-        }, {
-            threshold: 0.08,
-            rootMargin: '0px 0px -2% 0px'
-        });
-
-        targets.forEach((el) => revealObserver.observe(el));
-    };
-
     const reveal = () => {
         if (revealed) {
             return;
@@ -361,7 +306,6 @@ if (request_method_is('POST')) {
         revealed = true;
         body.classList.add('login-ready');
         body.classList.remove('login-preload');
-        initScrollReveal();
     };
 
     if (document.readyState === 'complete') {
