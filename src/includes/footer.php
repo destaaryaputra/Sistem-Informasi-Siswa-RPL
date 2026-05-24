@@ -67,6 +67,6 @@
 	elements.forEach((el) => observer.observe(el));
 })();
 </script>
-<vercel-live-feedback></vercel-live-feedback>
+
 </body>
 </html>
