@@ -48,11 +48,12 @@ if (request_method_is('POST')) {
     } else {
         $contact = post_string('email');
         $email = strtolower($contact);
-        $phone = normalize_phone_number($contact);
+        $isEmailContact = filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+        $phone = $isEmailContact ? '' : normalize_phone_number($contact);
 
         if ($username === '' || $contact === '') {
             $error = 'Username dan email atau no HP wajib diisi.';
-        } elseif ($phone === '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        } elseif (!$isEmailContact && $phone === '') {
             $error = 'Format email atau no HP tidak valid.';
         } else {
             try {
@@ -94,14 +95,15 @@ if (request_method_is('POST')) {
                         }
 
                         $candidateEmail = strtolower($candidate);
-                        $candidatePhone = normalize_phone_number($candidate);
+                        $candidateIsEmail = filter_var($candidateEmail, FILTER_VALIDATE_EMAIL) !== false;
+                        $candidatePhone = $candidateIsEmail ? '' : normalize_phone_number($candidate);
 
                         if ($phone !== '' && $candidatePhone !== '' && hash_equals($candidatePhone, $phone)) {
                             $contactMatched = true;
                             break;
                         }
 
-                        if ($phone === '' && filter_var($candidateEmail, FILTER_VALIDATE_EMAIL) && hash_equals($candidateEmail, $email)) {
+                        if ($isEmailContact && $candidateIsEmail && hash_equals($candidateEmail, $email)) {
                             $contactMatched = true;
                             break;
                         }
@@ -199,7 +201,7 @@ if (request_method_is('POST')) {
         <section class="login-card" aria-label="Form lupa password">
             <div class="login-left">
                 <h2>Reset Password</h2>
-                <p>Masukkan username dan email atau no HP verifikasi. Jika cocok, sistem akan mengirim link reset password ke email Anda.</p>
+                <p>Masukkan username dan email atau no HP verifikasi. Jika cocok, permintaan akan masuk ke admin untuk disetujui.</p>
             </div>
             <div class="login-right">
                 <?php if ($message): ?>
@@ -216,9 +218,9 @@ if (request_method_is('POST')) {
                     </div>
                     <div class="login-field">
                         <label for="email">Email atau No. HP Verifikasi</label>
-                        <input type="email" id="email" name="email" required autocomplete="email">
+                        <input type="text" id="email" name="email" required autocomplete="email" placeholder="email@sekolah.id atau 08xxxxxxxxxx">
                     </div>
-                    <button class="login-submit" type="submit">Kirim Link Reset</button>
+                    <button class="login-submit" type="submit">Kirim Permintaan Reset</button>
                 </form>
                 <p class="auth-help-links"><a href="<?= e(url('masuk.php')) ?>">Kembali ke login</a></p>
             </div>

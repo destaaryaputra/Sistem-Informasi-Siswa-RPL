@@ -62,6 +62,8 @@ if (!function_exists('rate_limit_db_status')) {
     // Ambil status rate limit dari database.
     function rate_limit_db_status(PDO $pdo, string $key, int $maxAttempts, int $windowSeconds): array
     {
+        ensure_rate_limit_table($pdo);
+
         $now = time();
         $storageKey = rate_limit_storage_key($key);
         $stmt = $pdo->prepare('SELECT attempts_json, blocked_until FROM tbl_rate_limits WHERE key_hash = ? LIMIT 1');
@@ -94,6 +96,8 @@ if (!function_exists('rate_limit_db_register_failure')) {
     // Catat kegagalan dan aktifkan blok sementara bila batas tercapai.
     function rate_limit_db_register_failure(PDO $pdo, string $key, int $maxAttempts, int $windowSeconds, int $lockSeconds): array
     {
+        ensure_rate_limit_table($pdo);
+
         $now = time();
         $storageKey = rate_limit_storage_key($key);
         $stmt = $pdo->prepare('SELECT attempts_json, blocked_until FROM tbl_rate_limits WHERE key_hash = ? LIMIT 1');
@@ -143,6 +147,8 @@ if (!function_exists('rate_limit_db_clear')) {
     // Hapus data rate limit saat proses berhasil.
     function rate_limit_db_clear(PDO $pdo, string $key): void
     {
+        ensure_rate_limit_table($pdo);
+
         $stmt = $pdo->prepare('DELETE FROM tbl_rate_limits WHERE key_hash = ?');
         $stmt->execute([rate_limit_storage_key($key)]);
     }
@@ -208,6 +214,11 @@ if (!function_exists('ensure_rate_limit_table')) {
     // Pastikan tabel rate limit tersedia.
     function ensure_rate_limit_table(PDO $pdo): void
     {
+        static $ensured = false;
+        if ($ensured) {
+            return;
+        }
+
         $pdo->exec(
             'CREATE TABLE IF NOT EXISTS tbl_rate_limits (
                 key_hash CHAR(64) PRIMARY KEY,
@@ -219,5 +230,6 @@ if (!function_exists('ensure_rate_limit_table')) {
             )'
         );
         $pdo->exec('CREATE INDEX IF NOT EXISTS idx_rate_limit_blocked_until ON tbl_rate_limits (blocked_until)');
+        $ensured = true;
     }
 }

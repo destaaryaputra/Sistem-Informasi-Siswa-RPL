@@ -30,6 +30,26 @@ if ($hasReadColumn) {
 // Notifikasi khusus admin untuk mendeteksi masalah data/sistem secara cepat.
 $adminSystemNotifs = [];
 if (($user['role'] ?? '') === 'admin') {
+    try {
+        ensure_password_reset_table($pdo);
+        $pendingResetCount = (int) $pdo->query(
+            "SELECT COUNT(*) FROM tbl_password_reset_tokens
+             WHERE used_at IS NULL AND approved_at IS NULL AND expires_at > NOW()"
+        )->fetchColumn();
+
+        if ($pendingResetCount > 0) {
+            $adminSystemNotifs[] = [
+                'tanggal' => date('Y-m-d'),
+                'pesan' => sprintf('Ada %d permintaan reset password menunggu persetujuan admin.', $pendingResetCount),
+                'tipe' => 'warning',
+                'action_url' => url('admin/pengguna.php#approval-reset-password'),
+                'action_label' => 'Tinjau',
+            ];
+        }
+    } catch (Throwable $e) {
+        // Jika tabel reset belum siap, notifikasi sistem lain tetap ditampilkan.
+    }
+
     $checks = [
         [
             'sql' => 'SELECT COUNT(*) FROM tbl_siswa WHERE id_orangtua IS NULL',
@@ -73,10 +93,18 @@ if (($user['role'] ?? '') === 'admin') {
                 'tanggal' => date('Y-m-d'),
                 'pesan' => $pesan,
                 'tipe' => $check['type'],
+                'action_url' => '',
+                'action_label' => '',
             ];
         }
     }
 }
+
+$adminSystemHasActions = array_reduce(
+    $adminSystemNotifs,
+    static fn (bool $carry, array $notif): bool => $carry || !empty($notif['action_url']),
+    false
+);
 
 // Tombol kembali diarahkan ke halaman internal aplikasi agar aman dari redirect eksternal.
 $backCandidate = get_string('back');
@@ -122,7 +150,7 @@ include __DIR__ . '/../src/includes/header.php';
                     </div>
                 <?php else: ?>
                     <div class="table-wrap">
-                        <table class="notif-table">
+                        <table class="notif-table responsive-table">
                             <thead>
                             <tr>
                                 <th>Status</th>
@@ -133,15 +161,15 @@ include __DIR__ . '/../src/includes/header.php';
                             <tbody>
                             <?php foreach ($notifs as $notif): ?>
                                 <tr class="notif-row <?= (bool) $notif['dibaca'] ? 'notif-read' : 'notif-unread' ?>" data-notif-id="<?= e((string) $notif['id_notifikasi']) ?>">
-                                    <td class="notif-status">
+                                    <td class="notif-status" data-label="Status">
                                         <?php if (!(bool) $notif['dibaca']): ?>
                                             <span class="badge unread-badge">Baru</span>
                                         <?php else: ?>
                                             <span class="status-text read">✓</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="notif-date"><?= e($notif['tanggal']) ?></td>
-                                    <td class="notif-message"><?= e($notif['pesan']) ?></td>
+                                    <td class="notif-date" data-label="Tanggal"><?= e($notif['tanggal']) ?></td>
+                                    <td class="notif-message" data-label="Pesan"><?= e($notif['pesan']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
@@ -158,20 +186,32 @@ include __DIR__ . '/../src/includes/header.php';
                     </div>
                 <?php else: ?>
                     <div class="table-wrap">
-                        <table>
+                        <table class="responsive-table">
                             <thead>
                             <tr>
                                 <th>Tanggal</th>
                                 <th>Tipe</th>
                                 <th>Pesan</th>
+                                <?php if ($adminSystemHasActions): ?>
+                                    <th>Aksi</th>
+                                <?php endif; ?>
                             </tr>
                             </thead>
                             <tbody>
                             <?php foreach ($adminSystemNotifs as $notif): ?>
                                 <tr>
-                                    <td><?= e($notif['tanggal']) ?></td>
-                                    <td><span class="badge <?= e($notif['tipe']) ?>"><?= e(strtoupper($notif['tipe'])) ?></span></td>
-                                    <td><?= e($notif['pesan']) ?></td>
+                                    <td data-label="Tanggal"><?= e($notif['tanggal']) ?></td>
+                                    <td data-label="Tipe"><span class="badge <?= e($notif['tipe']) ?>"><?= e(strtoupper($notif['tipe'])) ?></span></td>
+                                    <td data-label="Pesan"><?= e($notif['pesan']) ?></td>
+                                    <?php if ($adminSystemHasActions): ?>
+                                        <td data-label="Aksi">
+                                            <?php if (!empty($notif['action_url'])): ?>
+                                                <a class="badge filter-print" href="<?= e((string) $notif['action_url']) ?>"><?= e((string) $notif['action_label']) ?></a>
+                                            <?php else: ?>
+                                                -
+                                            <?php endif; ?>
+                                        </td>
+                                    <?php endif; ?>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>

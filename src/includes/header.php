@@ -10,6 +10,7 @@ $title = $title ?? 'EduTrack';
 $notifikasiList = [];
 $notifikasiCount = 0;
 $adminSystemAlertCount = 0;
+$adminResetRequestCount = 0;
 $showNotifMenu = $user !== null;
 
 // Ambil notifikasi milik user aktif untuk badge dan tampilan ringkas.
@@ -36,6 +37,17 @@ if ($showNotifMenu && isset($pdo)) {
 
     // Untuk admin, tambahkan notifikasi kesehatan data sistem ke badge.
     if (($user['role'] ?? '') === 'admin') {
+        try {
+            ensure_password_reset_table($pdo);
+            $adminResetRequestCount = (int) $pdo->query(
+                "SELECT COUNT(*) FROM tbl_password_reset_tokens
+                 WHERE used_at IS NULL AND approved_at IS NULL AND expires_at > NOW()"
+            )->fetchColumn();
+            $adminSystemAlertCount += $adminResetRequestCount;
+        } catch (Throwable $e) {
+            $adminResetRequestCount = 0;
+        }
+
         $adminChecks = [
             'SELECT COUNT(*) FROM tbl_siswa WHERE id_orangtua IS NULL',
             'SELECT COUNT(*) FROM tbl_siswa WHERE id_kelas IS NULL',

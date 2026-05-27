@@ -1368,6 +1368,7 @@ tbody tr td:first-child:not(:empty) {
 .table-wrap {
     width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .notif-table tbody tr.notif-unread {
@@ -1415,8 +1416,12 @@ tbody tr td:first-child:not(:empty) {
 }
 
 .table-wrap table {
-    min-width: 100%;
+    min-width: 680px;
     white-space: normal;
+}
+
+.report-page .table-wrap table {
+    min-width: 100%;
 }
 
 .badge {
@@ -1430,7 +1435,8 @@ tbody tr td:first-child:not(:empty) {
 }
 
 .badge.success { background: #dcfce7; color: #14532d; }
-.badge.warn { background: #ffefcc; color: #8a4b08; }
+.badge.warn,
+.badge.warning { background: #ffefcc; color: #8a4b08; }
 .badge.danger { background: #fee2e2; color: #991b1b; }
 
 .alert {
@@ -1465,6 +1471,29 @@ tbody tr td:first-child:not(:empty) {
 
 .alert.success::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23166534'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.alert.warn,
+.alert.warning {
+    background: #fffbeb;
+    color: #92400e;
+    border-color: #fde68a;
+}
+
+.alert.warn::before,
+.alert.warning::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2392400e'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 9v4m0 4h.01M10.3 4.3L2 18.6C1.5 19.5 2.1 20.5 3.1 20.5h17.8c1 0 1.6-1.1 1.1-1.9L13.7 4.3c-.5-.9-1.9-.9-2.4 0z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.admin-reset-alert {
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.admin-reset-alert a {
+    color: #7c2d12;
+    text-decoration: underline;
+    white-space: nowrap;
 }
 
 .alert.error, .login-alert {
@@ -1982,6 +2011,150 @@ tbody tr td:first-child:not(:empty) {
         font-size: 12px;
         padding: 12px 12px;
     }
+
+    .topbar-inner {
+        gap: 10px;
+    }
+
+    .topbar-meta {
+        width: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .topbar-notif,
+    .topbar-logout,
+    .topnav a {
+        min-height: 40px;
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .topbar-notif {
+        min-width: 0;
+        justify-content: center;
+    }
+
+    .topbar-notif span:nth-child(2) {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .topbar-logout {
+        min-width: 0;
+    }
+
+    .grid,
+    .panel-span-4 .grid,
+    .panel-span-5 .grid,
+    .panel-span-6 .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-toolbar {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .filter-field {
+        min-width: 0;
+    }
+
+    .filter-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .filter-actions button,
+    .filter-actions .filter-print {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .form-actions,
+    .nilai-actions {
+        justify-content: stretch;
+    }
+
+    .form-actions .btn-compact,
+    .form-actions > button,
+    .nilai-actions .btn-compact {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .responsive-table {
+        display: block;
+        min-width: 0 !important;
+        width: 100%;
+        border: 0;
+        background: transparent;
+        overflow: visible;
+    }
+
+    .responsive-table thead {
+        display: none;
+    }
+
+    .responsive-table tbody {
+        display: grid;
+        gap: 10px;
+    }
+
+    .responsive-table tbody tr {
+        display: grid;
+        gap: 8px;
+        padding: 10px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: var(--shadow-sm);
+        animation: none;
+    }
+
+    .responsive-table th,
+    .responsive-table td {
+        border: 0;
+    }
+
+    .responsive-table td {
+        display: grid;
+        grid-template-columns: minmax(96px, 38%) minmax(0, 1fr);
+        gap: 8px;
+        align-items: start;
+        min-width: 0;
+        padding: 0;
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
+
+    .responsive-table td::before {
+        content: attr(data-label);
+        color: var(--muted);
+        font-weight: 700;
+    }
+
+    .responsive-table tbody tr td:first-child:not(:empty) {
+        color: var(--text);
+        background: transparent;
+        font-weight: 400;
+    }
+
+    .responsive-table td > form {
+        display: flex;
+        width: 100%;
+    }
+
+    .responsive-table td > form > button,
+    .responsive-table .filter-print {
+        min-width: 0;
+        width: 100%;
+    }
 }
 
 /* Login Portal (single stylesheet) */
@@ -2438,9 +2611,36 @@ body.login-portal.login-ready .login-field:nth-of-type(2) .login-input-wrap inpu
 }
 
 @media (max-width: 640px) {
+    .login-shell {
+        width: 100%;
+        padding-inline: 12px;
+    }
+
+    .login-main {
+        align-items: start;
+        padding: 14px 0;
+    }
+
+    .login-card {
+        border-radius: 14px;
+    }
+
+    .login-brand {
+        min-width: 0;
+    }
+
+    .login-brand-text {
+        min-width: 0;
+    }
+
+    .login-brand-text p {
+        white-space: normal;
+        line-height: 1.35;
+    }
+
     .login-left,
     .login-right {
-        padding: var(--space-lg);
+        padding: 16px;
     }
 
     .login-left h2 {

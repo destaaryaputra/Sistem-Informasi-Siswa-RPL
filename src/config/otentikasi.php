@@ -199,7 +199,24 @@ function get_enum(string $key, array $allowed, string $default = ''): string
 // Normalisasi nomor telepon agar perbandingan kontak lebih stabil.
 function normalize_phone_number(string $value): string
 {
-    return preg_replace('/\D+/', '', trim($value)) ?? '';
+    $digits = preg_replace('/\D+/', '', trim($value)) ?? '';
+    if ($digits === '') {
+        return '';
+    }
+
+    if (str_starts_with($digits, '620')) {
+        return '62' . substr($digits, 3);
+    }
+
+    if (str_starts_with($digits, '0')) {
+        return '62' . substr($digits, 1);
+    }
+
+    if (str_starts_with($digits, '8')) {
+        return '62' . $digits;
+    }
+
+    return $digits;
 }
 
 // Normalisasi path internal supaya aman dipakai untuk redirect lokal.

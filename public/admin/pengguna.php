@@ -132,14 +132,17 @@ if (request_method_is('POST')) {
                 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
                 $headers .= "From: noreply@sistem-informasi-siswa.local\r\n";
 
-                $sent = @mail($targetEmail, $subject, $body, $headers);
+                $isTargetEmail = filter_var($targetEmail, FILTER_VALIDATE_EMAIL) !== false;
+                $sent = $isTargetEmail ? @mail($targetEmail, $subject, $body, $headers) : false;
                 if (!$sent) {
                     // Log link jika email gagal dikirim (misal: di localhost tanpa SMTP)
                     $dir = __DIR__ . '/../../app/storage';
                     if (!is_dir($dir)) @mkdir($dir, 0775, true);
                     $logLine = date('Y-m-d H:i:s') . ' | ' . $targetEmail . ' | ' . $resetLink . PHP_EOL;
                     @file_put_contents($dir . '/reset_mail_debug.log', $logLine, FILE_APPEND);
-                    $message = 'Permintaan reset password berhasil disetujui. Email gagal dikirim, link dicatat di log debug.';
+                    $message = $isTargetEmail
+                        ? 'Permintaan reset password berhasil disetujui. Email gagal dikirim, link dicatat di log debug.'
+                        : 'Permintaan reset password berhasil disetujui. Kontak verifikasi bukan email, link dicatat di log debug untuk diberikan manual.';
                 } else {
                     $message = 'Permintaan reset password berhasil disetujui dan email telah dikirim ke pengguna.';
                 }
@@ -313,6 +316,12 @@ include __DIR__ . '/../../src/includes/header.php';
 ?>
 <section class="card">
     <h2>Tambah Pengguna</h2>
+    <?php if ($resetRequests): ?>
+        <div class="alert warn admin-reset-alert">
+            <span>Ada <?= e((string) count($resetRequests)) ?> permintaan reset password menunggu persetujuan.</span>
+            <a href="#approval-reset-password">Tinjau sekarang</a>
+        </div>
+    <?php endif; ?>
     <?php if ($message): ?>
         <div class="alert success"><?= e($message) ?></div>
     <?php endif; ?>
@@ -391,13 +400,13 @@ include __DIR__ . '/../../src/includes/header.php';
         <p>Tidak ada permintaan reset yang menunggu persetujuan.</p>
     <?php else: ?>
         <div class="table-wrap">
-        <table>
+        <table class="responsive-table">
             <thead>
             <tr>
                 <th>ID Request</th>
                 <th>Username</th>
                 <th>Peran</th>
-                <th>Email Verifikasi</th>
+                <th>Kontak Verifikasi</th>
                 <th>Dibuat</th>
                 <th>Batas Waktu</th>
                 <th>Aksi</th>
@@ -406,13 +415,13 @@ include __DIR__ . '/../../src/includes/header.php';
             <tbody>
             <?php foreach ($resetRequests as $request): ?>
                 <tr>
-                    <td><?= e((string) $request['id_reset']) ?></td>
-                    <td><?= e((string) $request['username']) ?></td>
-                    <td><span class="badge"><?= e(strtoupper((string) $request['role'])) ?></span></td>
-                    <td><?= e((string) $request['email']) ?></td>
-                    <td><?= e((string) $request['created_at']) ?></td>
-                    <td><?= e((string) $request['expires_at']) ?></td>
-                    <td>
+                    <td data-label="ID Request"><?= e((string) $request['id_reset']) ?></td>
+                    <td data-label="Username"><?= e((string) $request['username']) ?></td>
+                    <td data-label="Peran"><span class="badge"><?= e(strtoupper((string) $request['role'])) ?></span></td>
+                    <td data-label="Kontak Verifikasi"><?= e((string) $request['email']) ?></td>
+                    <td data-label="Dibuat"><?= e((string) $request['created_at']) ?></td>
+                    <td data-label="Batas Waktu"><?= e((string) $request['expires_at']) ?></td>
+                    <td data-label="Aksi">
                         <form method="post" data-confirm="Setujui permintaan reset password ini?">
                             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                             <input type="hidden" name="approve_reset_request_id" value="<?= e((string) $request['id_reset']) ?>">
@@ -449,7 +458,7 @@ include __DIR__ . '/../../src/includes/header.php';
         </div>
     </form>
     <div class="table-wrap">
-    <table>
+    <table class="responsive-table">
         <thead>
         <tr>
             <th>ID</th>
@@ -462,11 +471,11 @@ include __DIR__ . '/../../src/includes/header.php';
         <tbody>
         <?php foreach ($users as $u): ?>
             <tr>
-                <td><?= e((string) $u['id_user']) ?></td>
-                <td><?= e($u['username']) ?></td>
-                <td><span class="badge"><?= e(strtoupper($u['role'])) ?></span></td>
-                <td><?= e($u['created_at']) ?></td>
-                <td>
+                <td data-label="ID"><?= e((string) $u['id_user']) ?></td>
+                <td data-label="Username"><?= e($u['username']) ?></td>
+                <td data-label="Peran"><span class="badge"><?= e(strtoupper($u['role'])) ?></span></td>
+                <td data-label="Tanggal Dibuat"><?= e($u['created_at']) ?></td>
+                <td data-label="Aksi">
                     <?php if ((int) $u['id_user'] !== $currentUserId): ?>
                         <form method="post" data-confirm="Hapus pengguna ini? Data terkait akan ikut terhapus sesuai relasi.">
                             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
@@ -488,7 +497,7 @@ include __DIR__ . '/../../src/includes/header.php';
 <section class="card" id="data-orangtua">
     <h2>Data Orang Tua</h2>
     <div class="table-wrap">
-    <table>
+    <table class="responsive-table">
         <thead>
         <tr>
             <th>ID</th>
@@ -502,12 +511,12 @@ include __DIR__ . '/../../src/includes/header.php';
         <tbody>
         <?php foreach ($orangtuaData as $ortu): ?>
             <tr>
-                <td><?= e((string) $ortu['id_orangtua']) ?></td>
-                <td><?= e($ortu['username']) ?></td>
-                <td><?= e(format_parent_name((string) $ortu['nama'], (string) ($ortu['jenis_kelamin'] ?? ''), (int) $ortu['id_orangtua'])) ?></td>
-                <td><?= e(($ortu['jenis_kelamin'] ?? '') === 'L' ? 'Laki-laki' : (($ortu['jenis_kelamin'] ?? '') === 'P' ? 'Perempuan' : '-')) ?></td>
-                <td><?= e((string) ($ortu['kontak'] ?? '-')) ?></td>
-                <td>
+                <td data-label="ID"><?= e((string) $ortu['id_orangtua']) ?></td>
+                <td data-label="Username"><?= e($ortu['username']) ?></td>
+                <td data-label="Nama"><?= e(format_parent_name((string) $ortu['nama'], (string) ($ortu['jenis_kelamin'] ?? ''), (int) $ortu['id_orangtua'])) ?></td>
+                <td data-label="Jenis Kelamin"><?= e(($ortu['jenis_kelamin'] ?? '') === 'L' ? 'Laki-laki' : (($ortu['jenis_kelamin'] ?? '') === 'P' ? 'Perempuan' : '-')) ?></td>
+                <td data-label="Kontak"><?= e((string) ($ortu['kontak'] ?? '-')) ?></td>
+                <td data-label="Aksi">
                     <?php if ((int) $ortu['id_user'] !== $currentUserId): ?>
                         <form method="post" data-confirm="Hapus user orang tua ini? Data terkait akan ikut terhapus sesuai relasi.">
                             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
@@ -529,7 +538,7 @@ include __DIR__ . '/../../src/includes/header.php';
 <section class="card" id="data-siswa">
     <h2>Data Siswa</h2>
     <div class="table-wrap">
-    <table>
+    <table class="responsive-table">
         <thead>
         <tr>
             <th>ID</th>
@@ -545,18 +554,18 @@ include __DIR__ . '/../../src/includes/header.php';
         <tbody>
         <?php foreach ($siswaData as $siswa): ?>
             <tr>
-                <td><?= e((string) $siswa['id_siswa']) ?></td>
-                <td><?= e($siswa['username']) ?></td>
-                <td><?= e($siswa['nama']) ?></td>
-                <td><?= e(($siswa['jenis_kelamin'] ?? '') === 'L' ? 'Laki-laki' : (($siswa['jenis_kelamin'] ?? '') === 'P' ? 'Perempuan' : '-')) ?></td>
-                <td><?= e($siswa['nis']) ?></td>
-                <td><?= e((string) ($siswa['nama_kelas'] ?? '-')) ?></td>
-                <td>
+                <td data-label="ID"><?= e((string) $siswa['id_siswa']) ?></td>
+                <td data-label="Username"><?= e($siswa['username']) ?></td>
+                <td data-label="Nama"><?= e($siswa['nama']) ?></td>
+                <td data-label="Jenis Kelamin"><?= e(($siswa['jenis_kelamin'] ?? '') === 'L' ? 'Laki-laki' : (($siswa['jenis_kelamin'] ?? '') === 'P' ? 'Perempuan' : '-')) ?></td>
+                <td data-label="NIS"><?= e($siswa['nis']) ?></td>
+                <td data-label="Kelas"><?= e((string) ($siswa['nama_kelas'] ?? '-')) ?></td>
+                <td data-label="Orang Tua">
                     <?= !empty($siswa['nama_orangtua'])
                         ? e(format_parent_name((string) $siswa['nama_orangtua'], (string) ($siswa['jk_orangtua'] ?? '')))
                         : '-' ?>
                 </td>
-                <td>
+                <td data-label="Aksi">
                     <?php if ((int) $siswa['id_user'] !== $currentUserId): ?>
                         <form method="post" data-confirm="Hapus user siswa ini? Data terkait akan ikut terhapus sesuai relasi.">
                             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
