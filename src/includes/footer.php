@@ -2,10 +2,9 @@
 </main>
 <footer class="site-footer">
 	<div class="container">
-		<p><strong>EduTrack Sekolah</strong></p>
-		<p class="footer-note">Sistem pemantauan kehadiran, nilai, dan notifikasi akademik secara terintegrasi.</p>
-	</div>
-</footer>
+	    <p><strong>EduTrack</strong></p>
+	    <p class="footer-note">Sistem Informasi Siswa Terintegrasi</p>
+	</div></footer>
 <script>
 (() => {
 	if (!('IntersectionObserver' in window)) {

@@ -120,14 +120,14 @@ if (request_method_is('POST')) {
 
                 // Kirim email beneran
                 $resetLink = absolute_url('reset-password.php?token=' . $token);
-                $subject = 'Reset Password Disetujui - Sistem Informasi Siswa';
+                $subject = 'Reset Password Disetujui - EduTrack';
                 $body = "Halo " . $targetUsername . ",\n\n" .
                         "Permintaan reset password Anda telah disetujui oleh Administrator.\n\n" .
                         "Silakan klik tautan di bawah ini untuk mengatur ulang password akun Anda:\n" .
                         $resetLink . "\n\n" .
                         "Tautan ini berlaku selama 24 jam ke depan. Jika Anda tidak merasa melakukan permintaan ini, silakan abaikan email ini atau hubungi Admin sekolah untuk keamanan akun Anda.\n\n" .
                         "Terima kasih,\n" .
-                        "Tim Sistem Informasi Siswa";
+                        "Tim EduTrack";
                 $headers = "MIME-Version: 1.0\r\n";
                 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
                 $headers .= "From: noreply@sistem-informasi-siswa.local\r\n";

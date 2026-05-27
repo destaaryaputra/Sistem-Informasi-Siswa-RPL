@@ -104,7 +104,7 @@ if (request_method_is('POST') && $error === '') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atur Ulang Password - Sistem Informasi Siswa</title>
+    <title>Atur Ulang Password - EduTrack</title>
     <link rel="icon" type="image/svg+xml" href="<?= e(url('assets/logo.svg')) ?>">
     <link rel="stylesheet" href="<?= e(url('assets/style.css?v=' . $styleVersion)) ?>">
 </head>
@@ -120,8 +120,8 @@ if (request_method_is('POST') && $error === '') {
                 </svg>
             </div>
             <div class="login-brand-text">
-                <h1>SISTEM INFORMASI SISWA</h1>
-                <p>Atur ulang password akun Anda</p>
+                <h1>EDUTRACK</h1>
+                <p>Sistem Informasi Siswa Terintegrasi</p>
             </div>
         </div>
     </div>
@@ -197,8 +197,8 @@ if (request_method_is('POST') && $error === '') {
 
 <footer class="site-footer">
     <div class="container">
-        <p><strong>EduTrack Sekolah</strong></p>
-        <p class="footer-note">Sistem pemantauan kehadiran, nilai, dan notifikasi akademik secara terintegrasi.</p>
+        <p><strong>EduTrack</strong></p>
+        <p class="footer-note">Sistem Informasi Siswa Terintegrasi</p>
     </div>
 </footer>
 

@@ -6,7 +6,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../config/bootstrap.php';
 
 $user = current_user();
-$title = $title ?? 'EduTrack Sekolah';
+$title = $title ?? 'EduTrack';
 $notifikasiList = [];
 $notifikasiCount = 0;
 $adminSystemAlertCount = 0;
@@ -108,8 +108,8 @@ $notifLabel = (($user['role'] ?? '') === 'admin') ? 'Notifikasi Sistem' : 'Notif
                 </svg>
             </div>
             <div class="brand-text">
-                <p class="brand-kicker">EduTrack Sekolah</p>
-                <h1>Sistem Pemantauan Kehadiran dan Prestasi Siswa</h1>
+                <p class="brand-kicker">EduTrack</p>
+                <h1 style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted); margin: 0; letter-spacing: 0.02em;">SISTEM INFORMASI SISWA</h1>
             </div>
         </div>
         <?php if ($user): ?>

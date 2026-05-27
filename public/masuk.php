@@ -127,7 +127,7 @@ if (request_method_is('POST')) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk - Sistem Informasi Siswa</title>
+    <title>Masuk - EduTrack</title>
     <style>
         html {
             overflow-y: scroll;
@@ -159,8 +159,8 @@ if (request_method_is('POST')) {
                 </svg>
             </div>
             <div class="login-brand-text">
-                <h1>SISTEM INFORMASI SISWA</h1>
-                <p>Portal Pemantauan Kehadiran dan Prestasi Akademik</p>
+                <h1>EDUTRACK</h1>
+                <p>Sistem Informasi Siswa Terintegrasi</p>
             </div>
         </div>
     </div>
@@ -263,8 +263,8 @@ if (request_method_is('POST')) {
 
 <footer class="site-footer">
     <div class="container">
-        <p><strong>EduTrack Sekolah</strong></p>
-        <p class="footer-note">Sistem pemantauan kehadiran, nilai, dan notifikasi akademik secara terintegrasi.</p>
+        <p><strong>EduTrack</strong></p>
+        <p class="footer-note">Sistem Informasi Siswa Terintegrasi</p>
     </div>
 </footer>
 <script>
