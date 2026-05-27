@@ -72,13 +72,14 @@ if (request_method_is('POST')) {
                     LEFT JOIN tbl_orangtua o ON o.id_user = u.id_user
                     LEFT JOIN tbl_siswa s ON s.id_user = u.id_user
                     LEFT JOIN tbl_orangtua ortu_siswa ON ortu_siswa.id_orangtua = s.id_orangtua
-                    WHERE u.username = ?
+                    WHERE LOWER(u.username) = LOWER(?)
                     LIMIT 1"
                 );
                 $stmt->execute([$username]);
                 $account = $stmt->fetch();
 
                 $contactMatched = false;
+                $debugReason = '';
                 if ($account) {
                     $candidates = [
                         (string) ($account['admin_email'] ?? ''),
@@ -105,6 +106,12 @@ if (request_method_is('POST')) {
                             break;
                         }
                     }
+
+                    if (!$contactMatched) {
+                        $debugReason = 'Kontak tidak cocok. Kandidat di database: ' . implode(', ', array_filter($candidates));
+                    }
+                } else {
+                    $debugReason = 'Username tidak ditemukan.';
                 }
 
                 if ($account && $contactMatched) {
