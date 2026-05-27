@@ -232,6 +232,22 @@ function client_identity(): string
     return hash('sha256', $ip . '|' . $ua);
 }
 
+// Bangun URL absolut (dengan http/https dan host) untuk keperluan email/luar sistem.
+function absolute_url(string $path): string
+{
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = trim((string) ($_SERVER['HTTP_HOST'] ?? ''));
+    if (preg_match('/^[A-Za-z0-9.-]+(?::\d{1,5})?$/', $host) !== 1) {
+        $host = '';
+    }
+
+    if ($host === '') {
+        return url($path);
+    }
+
+    return $scheme . '://' . $host . url($path);
+}
+
 // Pastikan container rate limit tersedia di session.
 function ensure_rate_limit_store(): void
 {

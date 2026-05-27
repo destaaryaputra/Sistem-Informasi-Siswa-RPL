@@ -93,25 +93,61 @@ if (request_method_is('POST')) {
                 throw new RuntimeException('ID permintaan reset tidak valid.');
             }
 
-            $stmt = $pdo->prepare('UPDATE tbl_password_reset_tokens SET approved_at = NOW(), approved_by = ? WHERE id_reset = ? AND used_at IS NULL AND approved_at IS NULL AND expires_at > NOW()');
-            $stmt->execute([$currentUserId, $idReset]);
+            $token = bin2hex(random_bytes(32));
+            $tokenHash = hash('sha256', $token);
+
+            // Update token_hash, approved_at, dan reset expiry ke 24 jam dari sekarang (PostgreSQL syntax).
+            $stmt = $pdo->prepare("UPDATE tbl_password_reset_tokens SET approved_at = NOW(), approved_by = ?, token_hash = ?, expires_at = NOW() + INTERVAL '24 hours' WHERE id_reset = ? AND used_at IS NULL AND approved_at IS NULL AND expires_at > NOW()");
+            $stmt->execute([$currentUserId, $tokenHash, $idReset]);
 
             if ($stmt->rowCount() < 1) {
                 throw new RuntimeException('Permintaan reset tidak ditemukan atau sudah diproses.');
             }
 
-            $stmt = $pdo->prepare('SELECT id_user FROM tbl_password_reset_tokens WHERE id_reset = ? LIMIT 1');
+            // Ambil data untuk notifikasi dan email.
+            $stmt = $pdo->prepare('SELECT pr.email, u.id_user, u.username FROM tbl_password_reset_tokens pr JOIN tbl_users u ON u.id_user = pr.id_user WHERE pr.id_reset = ? LIMIT 1');
             $stmt->execute([$idReset]);
-            $idTargetUser = (int) ($stmt->fetchColumn() ?: 0);
+            $resetData = $stmt->fetch();
 
-            if ($idTargetUser > 0) {
-                $notifStmt = $pdo->prepare('INSERT INTO tbl_notifikasi (id_user, pesan, tanggal) VALUES (?, ?, CURDATE())');
-                $notifStmt->execute([$idTargetUser, 'Permintaan reset password Anda sudah disetujui admin. Silakan gunakan link reset yang telah dikirim.']);
+            if ($resetData) {
+                $idTargetUser = (int) $resetData['id_user'];
+                $targetEmail = (string) $resetData['email'];
+                $targetUsername = (string) $resetData['username'];
+
+                // In-app notification
+                $notifStmt = $pdo->prepare('INSERT INTO tbl_notifikasi (id_user, pesan, tanggal) VALUES (?, ?, CURRENT_DATE)');
+                $notifStmt->execute([$idTargetUser, 'Permintaan reset password Anda sudah disetujui admin. Silakan cek email Anda untuk link reset.']);
+
+                // Kirim email beneran
+                $resetLink = absolute_url('reset-password.php?token=' . $token);
+                $subject = 'Reset Password Disetujui - Sistem Informasi Siswa';
+                $body = "Halo " . $targetUsername . ",\n\n" .
+                        "Permintaan reset password Anda telah disetujui oleh Administrator.\n\n" .
+                        "Silakan klik tautan di bawah ini untuk mengatur ulang password akun Anda:\n" .
+                        $resetLink . "\n\n" .
+                        "Tautan ini berlaku selama 24 jam ke depan. Jika Anda tidak merasa melakukan permintaan ini, silakan abaikan email ini atau hubungi Admin sekolah untuk keamanan akun Anda.\n\n" .
+                        "Terima kasih,\n" .
+                        "Tim Sistem Informasi Siswa";
+                $headers = "MIME-Version: 1.0\r\n";
+                $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+                $headers .= "From: noreply@sistem-informasi-siswa.local\r\n";
+
+                $sent = @mail($targetEmail, $subject, $body, $headers);
+                if (!$sent) {
+                    // Log link jika email gagal dikirim (misal: di localhost tanpa SMTP)
+                    $dir = __DIR__ . '/../../app/storage';
+                    if (!is_dir($dir)) @mkdir($dir, 0775, true);
+                    $logLine = date('Y-m-d H:i:s') . ' | ' . $targetEmail . ' | ' . $resetLink . PHP_EOL;
+                    @file_put_contents($dir . '/reset_mail_debug.log', $logLine, FILE_APPEND);
+                    $message = 'Permintaan reset password berhasil disetujui. Email gagal dikirim, link dicatat di log debug.';
+                } else {
+                    $message = 'Permintaan reset password berhasil disetujui dan email telah dikirim ke pengguna.';
+                }
+            } else {
+                $message = 'Permintaan reset password berhasil disetujui.';
             }
-
-            $message = 'Permintaan reset password berhasil disetujui.';
         } catch (Throwable $e) {
-            $error = 'Gagal menyetujui permintaan reset password.';
+            $error = 'Gagal menyetujui permintaan reset password: ' . $e->getMessage();
         }
     } elseif (post_int('delete_user_id') > 0) {
         try {

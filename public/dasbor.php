@@ -151,7 +151,7 @@ include __DIR__ . '/../src/includes/header.php';
 
     $stmt = $pdo->prepare(
         'SELECT
-            (SELECT COUNT(*) FROM tbl_kehadiran WHERE id_guru = ? AND tanggal = CURDATE()) AS absen_hari_ini,
+            (SELECT COUNT(*) FROM tbl_kehadiran WHERE id_guru = ? AND tanggal = CURRENT_DATE) AS absen_hari_ini,
             (SELECT COUNT(*) FROM tbl_nilai WHERE id_guru = ?) AS total_nilai,
             (SELECT COUNT(DISTINCT id_kelas) FROM tbl_jadwal WHERE id_guru = ?) AS kelas_diampu'
     );
